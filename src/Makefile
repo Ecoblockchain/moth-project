@@ -19,4 +19,4 @@ moth: $(OBJ)
 .PHONY: clean
 
 clean:
-	rm -f #(ODIR)/*.o *~ moth $(IDIR)/*~ 
+	rm -f moth #(ODIR)/*.o *~ $(IDIR)/*~ 
