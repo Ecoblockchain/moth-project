@@ -86,7 +86,6 @@ void * gpsRead() {
 		printf("Error opening logfile.\n");
 		return NULL;
 	}
-	fputs("BEGIN:", logfile);
 
 	while (1) {
 		while (read(tty_fd_gps, &aa, 1) == -1 || (aa != '$' && read_more != 1) );   // read 1 character from stream (blocking call)
