@@ -1,5 +1,4 @@
-*.out
 allen-edwards
-.*
 moth
 *.log
+src/obj/*
