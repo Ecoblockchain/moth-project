@@ -1,4 +1,5 @@
-#include <mraa/aio.h>
+#include "../include/mraa/aio.h"
+#include <stdio.h>
 
 void * spRead() {
 	mraa_aio_context stringpot;
