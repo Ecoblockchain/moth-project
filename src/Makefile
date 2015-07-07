@@ -2,7 +2,7 @@
 IDIR=../include
 ODIR=obj
 CC=gcc
-CFLAGS=-Wall -pthread
+CFLAGS=-Wall -pthread -lmraa
 
 _DEPS=mraa.h mraa/aio.h
 DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS))
