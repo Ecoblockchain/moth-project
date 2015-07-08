@@ -171,5 +171,17 @@ double get_sog(){
 	return value;
 }
 
-
-
+int str_split(char **array, char *buf, char *sep, int max){
+                // takes string buf and breaks it up into sub strings which array will point at
+                // at most max elements in array
+                // input buf will be modified
+        char *token;
+        int i = 0;
+        int size = 0;
+        while ( ( i < max -1 ) && ((token = strsep(&buf,sep))!= NULL ) ) {
+                array[i++] = token;
+                }
+        array[i] = NULL;  // set to null
+        size = i;
+    return size;
+}
