@@ -1,23 +1,19 @@
 # Makefile for Red Bull Moth Project 2015
-IDIR=include
-SDIR=src
-ODIR=$(SDIR)/obj
+ODIR=src/obj
 CC=gcc
 CFLAGS=-Wall -pthread -lmraa
-
-_DEPS=mraa.h mraa/aio.h
-DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS))
+FILE=moth
 
 _OBJ=main.o gps.o stringpot.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
-$(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
+$(ODIR)/%.o: src/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-moth: $(OBJ)
+$(FILE): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^ 
 	
 .PHONY: clean
 
 clean:
-	rm -f moth $(ODIR)/*.o $(SDIR)/*~ $(IDIR)/*~ 
+	rm -f moth $(ODIR)/*.o $(SDIR)/*~
