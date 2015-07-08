@@ -1,3 +1,9 @@
+/*
+ * main.c
+ *
+ *      Author: James Vaughan
+ */
+
 #include <pthread.h>
 
 void * gpsRead();
