@@ -1,9 +1,16 @@
+/*
+ * gps.c
+ *
+ *      Authors: Allen Edwards and James Vaughan
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <termios.h>
 #include <fcntl.h>
 #include <time.h>
 #include <unistd.h>
+#include "prototypes.h"
 
 volatile int tty_fd_gps;
 
@@ -69,23 +76,12 @@ void initGps() {
 
 // read from the gps forever
 void * gpsRead() {
-	printf("ST gps read is running\n");
+	printf("GPS read is running\n");
 	char aa;
 	char local_buffer[500];
 	int idx = 0;
 	initGps();
 	int read_more = 0;
-
-	time_t rawtime;
-	char * timeString;
-
-	time_t start = time(0);
-
-	FILE * logfile = fopen("data.log", "w");
-	if (logfile == NULL) {
-		printf("Error opening logfile.\n");
-		return NULL;
-	}
 
 	while (1) {
 		while (read(tty_fd_gps, &aa, 1) == -1 || (aa != '$' && read_more != 1) );   // read 1 character from stream (blocking call)
@@ -115,18 +111,12 @@ void * gpsRead() {
 					printf("ST GPS Not Ready %s\n",local_buffer);
 				} else if (strstr(local_buffer, "RMC")) {
 					// GPS Sentence
-					rawtime = time(0);					
-					timeString = ctime(&rawtime);
-					timeString[24] = '\0';
-					printf("%s: GR %s", timeString, local_buffer);
-					fprintf(logfile, "%s: GR %s", timeString, local_buffer);
-					while (difftime(time(0), start) < 1);
-					start = time(0);
+					printf("GR %s", local_buffer);
+					parse_rmc(local_buffer);
 				}
 			}
 		}
 	}
 
-	fclose(logfile);
 	return NULL;
 }
