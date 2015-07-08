@@ -1,22 +1,38 @@
-#include "../include/mraa/aio.h"
+/*
+ * stringpot.c
+ *
+ *      Author: James Vaughan
+ */
+
+#include <unistd.h>
+#include <mraa/spi.h>
 #include <stdio.h>
 
 void * spRead() {
-	mraa_aio_context stringpot;
-	float spValue;
+	mraa_spi_context spi;
+	spi = mraa_spi_init(0);
+	unsigned int response = 0;
+	printf("Initialized SPI\n");
+	uint8_t data[] = {0x00, 100};
+	uint8_t * recv;
 
-	stringpot = mraa_aio_init(0);
-	if (stringpot == NULL) {
-		printf("Error initializing String Potentiometer\n");
-		return NULL;
+	while (1) {
+		int i;
+		for (i = 90; i < 130; i++) {
+			data[1] = i;
+			recv = mraa_spi_write_buf(spi, data, 2);
+			printf("Writing -%i", i);
+			printf("RECIEVED-%i-%i\n", recv[0], recv[1]);
+			usleep(100000);
+		}
+		for (i = 130; i < 90; i--) {
+			data[1] = i;
+			recv = mraa_spi_write_buf(spi, data, 2);
+			printf("Writing -%i", i);
+			printf("RECIEVED-%i-%i\n", recv[0], recv[1]);
+			usleep(100000);
+		}
 	}
-	printf("Initialized String Potentiometer\n");
 
-	while(1) {
-		spValue = mraa_aio_read_float(stringpot);
-		printf("String Pot Value: %f\n", spValue);
-	}
-
-	mraa_aio_close(stringpot);
 	return NULL;
 }
