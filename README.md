@@ -1,5 +1,5 @@
 # Surfing Moth Project
-> Data capture project for Red Bull High Performance Technology
+### Data capture project for Red Bull High Performance Technology
 <hr>
 
 ## Dependencies
