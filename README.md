@@ -1,6 +1,6 @@
 # Surfing Moth Project
-### Data capture project for Red Bull High Performance Technology
-<hr>
+##### Data capture project for Red Bull High Performance Technology
+
 
 ## Dependencies
 * An Intel Edison
