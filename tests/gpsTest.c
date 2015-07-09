@@ -13,10 +13,18 @@ int main() {
 		printf("error writing to gps\n");
 		return 1;
 	}
+
+	char * c;
+	while (read(gps, c, 1) != -1) {
+		printf("READ: %c\n", c);
+	}
+
 	if (close(gps) == -1) {
 		printf("error closing gps\n");
 		return 1;
 	}
-	printf("success\n");
+	printf("success writing to gps\n");
+
+	
 	return 0;
 }
