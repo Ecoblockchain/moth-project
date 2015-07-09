@@ -1,13 +1,21 @@
 #include <stdio.h>
+#include <termios.h>
 #include <fcntl.h>
 #include <unistd.h>
 
+volatile int gps;
+
+void initGps(){
+	gps = open("/dev/ttyMFD1", O_RDWR);
+	struct termios tio;
+	tcgetattr(gps, &tio);
+	cfsetspeed(&tio, B9600);
+	cfmakeraw(&tio);
+	tcsetattr(gps, TCSANOW, &tio);
+}
+
 int main() {
-	int gps;
-	if ((gps = open("/dev/ttyMFD1", O_RDWR)) == -1) {
-		printf("error opening gps\n");
-		return 1;
-	}
+	initGps();
 	char *string = "$PMTK104*37\r\n";
 	if (write(gps, string, 13) == -1) {
 		printf("error writing to gps\n");
