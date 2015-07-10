@@ -8,7 +8,6 @@
 #include <string.h>
 #include <termios.h>
 #include <fcntl.h>
-#include <time.h>
 #include <unistd.h>
 #include "prototypes.h"
 
@@ -84,7 +83,7 @@ void * gpsRead() {
 	int read_more = 0;
 
 	while (1) {
-		while (read(tty_fd_gps, &aa, 1) == -1 || (aa != '$' && read_more != 1) );   // read 1 character from stream (blocking call)
+		while (read(tty_fd_gps, &aa, 1) == -1 || (aa != '$' && read_more != 1));   // read 1 character from stream (blocking call)
 		read_more = 1;
 		if (aa != '\n') {
 			local_buffer[idx++] = aa;
@@ -109,10 +108,11 @@ void * gpsRead() {
 			if(verify_nmea(local_buffer) == 0) {
 				if (strstr(local_buffer,",,,,,") && strstr(local_buffer, "RMC")){
 					printf("ST GPS Not Ready %s\n",local_buffer);
-				} else if (strstr(local_buffer, "RMC")) {
+				} else {
+				/* } else if (strstr(local_buffer, "RMC")) { */
 					// GPS Sentence
 					printf("GR %s", local_buffer);
-					parse_rmc(local_buffer);
+					/* parse_rmc(local_buffer); */
 				}
 			}
 		}
