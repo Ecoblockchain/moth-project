@@ -112,7 +112,7 @@ void * gpsRead() {
 				/* } else if (strstr(local_buffer, "RMC")) { */
 					// GPS Sentence
 					printf("GR %s", local_buffer);
-					/* parse_rmc(local_buffer); */
+					parse_rmc(local_buffer);
 				}
 			}
 		}
