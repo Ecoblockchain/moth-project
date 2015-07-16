@@ -3,7 +3,7 @@
 void * statusLED() {
 	mraa_gpio_context led;
 
-	led = mraa_gpio_init(15);
+	led = mraa_gpio_init(6);
 
 	mraa_gpio_dir(led, MRAA_GPIO_OUT_HIGH);
 
