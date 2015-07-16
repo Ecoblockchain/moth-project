@@ -2,7 +2,7 @@
  * prototypes.h
  *
  *  Created on: Jan 22, 2015
- *      Author: Doris
+ *      Authors: Doris, James Vaughan
  */
 
 #ifndef PROTOTYPES_H_
@@ -55,5 +55,12 @@ void send_debug_data_to_bluetooth();
 
 void vector_add(double*, double*, double*);
 void vector_sub(double*, double*, double*);
+
+
+// James
+void * gpsRead();
+void * spRead();
+void * statusLED();
+
 
 #endif /* PROTOTYPES_H_ */
