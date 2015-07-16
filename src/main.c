@@ -17,7 +17,8 @@ int main() {
 	/* tid[1]= pthread_create(&threads[1] NULL, spRead, NULL); */
 	tid[2] = pthread_create(&threads[2], NULL, statusLED, NULL);
 
-	for (int i = 0; i < MAX_THREADS; i++) {
+	int i;
+	for (i = 0; i < MAX_THREADS; i++) {
 		pthread_join(threads[i], NULL);
 	}
 
