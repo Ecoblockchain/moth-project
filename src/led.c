@@ -7,6 +7,7 @@ void * statusLED() {
 
 	mraa_gpio_dir(led, MRAA_GPIO_OUT_HIGH);
 
+	printf("Writing to status LED");
 	while (1) {
 		mraa_gpio_write(led, 1);
 	}
