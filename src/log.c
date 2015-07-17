@@ -2,7 +2,7 @@
  * log.c
  *
  *  Created on: Jan 28, 2015
- *      Author: Allen Edwards
+ *     Authors: Allen Edwards, James Vaughan
  */
 
 #include "defines.h"
@@ -14,7 +14,7 @@
 #include <ctype.h>
 #include "log.h"
 
-pthread_mutex_t log_lock= PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t log_lock = PTHREAD_MUTEX_INITIALIZER;
 FILE *fp;
 char filename[50];
 double log_array[LOG_ARRAY_MAX];
@@ -120,55 +120,6 @@ void parse_rmc(char *buffer){
 		write_log_row();
 		//printf("** Writing line to file\n");
 	}
-}
-
-/********************************************************
-$--RMB,A,x.x,a,c--c,c--c,llll.ll,a,yyyyy.yy,a,x.x,x.x,x.x,A*hh
- 0) $--RMB
- 1) Status, V = Navigation receiver warning
- 2) Cross Track error - nautical miles
- 3) Direction to Steer, Left or Right
- 4) TO Waypoint ID
- 5) FROM Waypoint ID
- 6) Destination Waypoint Latitude
- 7) N or S
- 8) Destination Waypoint Longitude
- 9) E or W
-10) Range to destination in nautical miles
-11) Bearing to destination in degrees True
-12) Destination closing velocity in knots
-13) Arrival Status, A = Arrival Circle Entered
-14) Checksum
-
-*********************************************************/
-
-void parse_rmb(char *buffer){
-	char local_buffer[100];
-    strcpy(local_buffer, buffer);
-	//printf("** %s\n",local_buffer);
-    char *array[50];
-    char sep[] = "*,";
-    str_split(array, local_buffer+3, sep, 50);
-	pthread_mutex_lock(&log_lock);
-		strcpy(mark,array[5]);
-	pthread_mutex_unlock(&log_lock);
-	//printf("**%s\n",mark);
-}
-
-double get_cog(){
-	double value = 0;
-	pthread_mutex_lock(&log_lock);
-		value = log_array[COG];
-	pthread_mutex_unlock(&log_lock);
-	return value;
-}
-
-double get_sog(){
-	double value = 0;
-	pthread_mutex_lock(&log_lock);
-		value = log_array[SOG];
-	pthread_mutex_unlock(&log_lock);
-	return value;
 }
 
 int str_split(char **array, char *buf, char *sep, int max){

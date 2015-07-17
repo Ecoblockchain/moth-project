@@ -3,11 +3,11 @@
 void * statusLED() {
 	mraa_gpio_context led;
 
-	led = mraa_gpio_init(6);
+	led = mraa_gpio_init(33);
 
-	mraa_gpio_dir(led, MRAA_GPIO_OUT_HIGH);
+	mraa_gpio_dir(led, MRAA_GPIO_OUT);
 
-	printf("Writing to status LED");
+	printf("Writing to status LED\n");
 	while (1) {
 		mraa_gpio_write(led, 1);
 	}

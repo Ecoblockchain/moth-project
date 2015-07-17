@@ -10,10 +10,10 @@
 
 #define		DATE	0
 #define		TIME	1
-#define		RAW_AWA	2
-#define		RAW_AWS	3
-#define		RAW_BS	4
-#define		RAW_HDG	5
+#define		LATITUDE	2
+#define		LONGITUDE	3
+#define		SOG	4
+#define		COG	5
 #define		RAW_DEPTH	6
 #define		RAW_HEEL	7
 #define		RAW_LEEWAY	8
@@ -37,10 +37,10 @@
 #define		TWD	26
 #define		TAC_TWD_CORRECTION	27
 #define		TAC_TWS_CORRECTION	28
-#define		LATITUDE	29
-#define		LONGITUDE	30
-#define		SOG	31
-#define		COG	32
+#define		RAW_AWA	29
+#define		RAW_AWS	30
+#define		RAW_BS	31
+#define		RAW_HDG	32
 #define		VARIATION	33
 #define		CURRENT_KT	34
 #define		CURRENT_DIR	35
