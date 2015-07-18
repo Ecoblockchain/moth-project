@@ -61,7 +61,7 @@ void open_file(char *time, char *date){
 	sprintf(filename,"/home/root/log/log_%s.txt",timestamp);
 	fp=fopen(filename, "w");
 	file_open = 1;
-	fprintf(fp, "ROW\tDATE\tTIME\tRAW_AWA\tRAW_AWS\tRAW_BS\tRAW_HDG\tRAW_DEPTH\tRAW_HEEL\tRAW_LEEWAY\tRAW_TWA\tRAW_TWS\tCORRECTED_AWA\tCORRECTED_AWS\tCORRECTED_BS\tCORRECTED_HDG\tCORRECTED_DEPTH\tCORRECTED_HEEL\tCORRECTED_LEEWAY\tCORRECTED_TWS\tCORRECTED_TWA\tCORRECTED_TWD\tCALCULATED_TWS\tCALCULATED_TWA\tCALCULATED_TWD\tTWS\tTWA\tTWD\tTAC_TWD_CORRECTION\tTAC_TWS_CORRECTION\tLATITUDE\tLONGITUDE\tSOG\tCOG\tVARIATION\tCURRENT_KT\tCURRENT_DIR\tMARK\n");
+	fprintf(fp, "ROW\tDATE\tTIME\tLONGITUDE\tSOG\tCOG\n");
 	fclose(fp);
 }
 
@@ -73,6 +73,7 @@ void write_log_row(){
 	fprintf(fp,"%d\t",j++);
 	pthread_mutex_lock(&log_lock);
 		for (i = 0 ; i < LOG_ARRAY_MAX ; i++){
+			printf("Writing row: %0.6f\t",log_array[i]);
 			fprintf(fp,"%0.6f\t",log_array[i]);
 		}
 		fprintf(fp,"%s\n",mark);

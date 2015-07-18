@@ -44,7 +44,7 @@
 #define		VARIATION	33
 #define		CURRENT_KT	34
 #define		CURRENT_DIR	35
-#define		LOG_ARRAY_MAX	36
+#define		LOG_ARRAY_MAX	6
 
 
 
