@@ -71,12 +71,14 @@ void write_log_row(){
 	static int j = 1;
 	int i = 0;
 	fprintf(fp,"%d\t",j++);
+	printf("%d\t",j);
 	pthread_mutex_lock(&log_lock);
 		for (i = 0 ; i < LOG_ARRAY_MAX ; i++){
-			printf("Writing row: %0.6f\t",log_array[i]);
 			fprintf(fp,"%0.6f\t",log_array[i]);
+			printf("%0.6f\t",log_array[i]);
 		}
 		fprintf(fp,"%s\n",mark);
+		printf("%s\n",mark);
 	pthread_mutex_unlock(&log_lock);
 	fclose(fp);
 }
