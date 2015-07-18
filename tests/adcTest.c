@@ -4,7 +4,7 @@
 
 void * spRead() {
 	mraa_spi_context spi;
-	spi = mraa_spi_init(0);
+	spi = mraa_spi_init(5);
 	mraa_spi_mode(spi, MRAA_SPI_MODE3);
 	unsigned int response = 0;
 	printf("Initialized SPI\n");
