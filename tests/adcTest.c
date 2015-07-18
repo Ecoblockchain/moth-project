@@ -15,7 +15,7 @@ void * spRead() {
 		int i;
 		for (i = 90; i < 130; i++) {
 			data[1] = i;
-			recv = mraa_spi_write_buf(spi, data, 2);
+			mraa_spi_transfew_buf(spi, data, recv, 2);
 			printf("Writing -%i", i);
 			printf("RECIEVED-%i-%i\n", recv[0], recv[1]);
 			usleep(100000);
