@@ -8,8 +8,16 @@ void * spRead() {
 	mraa_spi_mode(spi, MRAA_SPI_MODE3);
 	unsigned int response = 0;
 	printf("Initialized SPI\n");
-	uint8_t data[] = {0x00, 100};
+	uint8_t data[] = {0x68, 0x00};
 	uint8_t * recv;
+
+	while (1) {
+		printf("Writing - %i-%i", data[0], data[1]);
+		recv = mraa_spi_write_buf(spi, data, 2);
+		printf("  -- Received - %i-%i", recv[0], recv[1]);
+		usleep(300000);
+	}
+	
 
 	while (1) {
 		int i;
