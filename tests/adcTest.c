@@ -5,7 +5,7 @@
 int main() {
 	mraa_spi_context spi;
 	spi = mraa_spi_init(5);
-	mraa_spi_mode(spi, MRAA_SPI_MODE3);
+	mraa_spi_mode(spi, MRAA_SPI_MODE0);
 	unsigned int response = 0;
 	printf("Initialized SPI\n");
 	uint8_t data[] = {0x68, 0x00};
