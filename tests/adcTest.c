@@ -2,7 +2,7 @@
 #include <mraa/spi.h>
 #include <stdio.h>
 
-void * spRead() {
+int main() {
 	mraa_spi_context spi;
 	spi = mraa_spi_init(5);
 	mraa_spi_mode(spi, MRAA_SPI_MODE3);
@@ -18,29 +18,5 @@ void * spRead() {
 		usleep(300000);
 	}
 	
-
-	while (1) {
-		int i;
-		for (i = 90; i < 130; i++) {
-			data[1] = i;
-			mraa_spi_transfer_buf(spi, data, recv, 2);
-			printf("Writing -%i", i);
-			printf("RECIEVED-%i-%i\n", recv[0], recv[1]);
-			usleep(100000);
-		}
-		for (i = 130; i < 90; i--) {
-			data[1] = i;
-			recv = mraa_spi_write_buf(spi, data, 2);
-			printf("Writing -%i", i);
-			printf("RECIEVED-%i-%i\n", recv[0], recv[1]);
-			usleep(100000);
-		}
-	}
-
-	return NULL;
-}
-
-int main() {
-	spRead();
 	return 0;
 }
