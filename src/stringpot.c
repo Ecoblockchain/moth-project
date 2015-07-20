@@ -15,6 +15,7 @@ void * spRead() {
 	int chipSelectPin = 8;
 	mraa_spi_context spi;
 	mraa_gpio_context chipSelect;
+	printf("Starting spRead.\n");
 
 	spi = mraa_spi_init(spi_dev_num);
 	chipSelect = mraa_gpio_init(chipSelectPin);
