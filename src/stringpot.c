@@ -35,7 +35,8 @@ void * spRead() {
 		response = response << 8;
 		recv = mraa_spi_write_buf(spi, zero, 1);
 		response = response | recv[0];
-		printf("value: %i", response);
+		printf("value: %i\n", response);
+		mraa_gpio_write(chipSelect, 1);
 		usleep(50000);
 	}
 
