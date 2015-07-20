@@ -80,6 +80,13 @@ void write_log_row(){
 	fclose(fp);
 }
 
+void log_error(char *message) {
+	fp = fopen(filename, "a");
+	pthread_mutex_lock(&log_lock);
+		fprintf(fp, "%s\n", message);
+	pthread_mutex_lock(&log_lock);
+}
+
 /***************************************************
  $--RMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,xxxx,x.x,a*hh
  0) $--RMC
