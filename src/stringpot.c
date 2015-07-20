@@ -5,6 +5,7 @@
  */
 
 #include <unistd.h>
+#include <math.h>
 #include <mraa/spi.h>
 #include <mraa/gpio.h>
 #include <stdio.h>
@@ -27,6 +28,13 @@ void * spRead() {
 	uint8_t zero[] = {0x00};
 	uint8_t * recv;
 
+	int in_start = 6;
+	int in_end = 979;
+	int out_start = 0;
+	int out_end = 100;
+
+	double slope = 1.0 * (out_end - out_start) / (in_end - in_start);
+
 	while (1) {
 		mraa_gpio_write(chipSelect, 0);		
 		recv = mraa_spi_write_buf(spi, data, 1);
@@ -35,9 +43,18 @@ void * spRead() {
 		response = response << 8;
 		recv = mraa_spi_write_buf(spi, zero, 1);
 		response = response | recv[0];
+		response = map(response);
 		printf("value: %i", response);
 		usleep(50000);
 	}
 
 	return NULL;
+}
+
+double round(double d) {
+	return floor(d + 0.5);
+}
+
+int map(int input) {
+	return out_start + round(slope * (input - in_start));
 }
