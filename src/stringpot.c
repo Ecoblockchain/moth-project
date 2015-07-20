@@ -12,7 +12,7 @@
 
 void * spRead() {
 	const int spi_dev_num = 5;
-	int chipSelectPin = 8;
+	int chipSelectPin = 15;
 	mraa_spi_context spi;
 	mraa_gpio_context chipSelect;
 
