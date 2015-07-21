@@ -1,3 +1,5 @@
+// Author: James Vaughan
+
 #include <stdio.h>
 #include <mraa/i2c.h>
 
