@@ -14,8 +14,8 @@ $(ODIR)/%.o: src/%.c $(HEADERS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(FILE): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^ 
-	
+	$(CC) $(CFLAGS) -o $@ $^
+
 .PHONY: clean
 
 clean:
