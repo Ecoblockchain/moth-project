@@ -16,7 +16,7 @@ int map(int input, int in_start, int in_end, int out_start, int out_end) {
 
 void * spRead() {
 	const int spi_dev_num = 5;
-	int chipSelectPin = 8;
+	int chipSelectPin = 15;
 	mraa_spi_context spi;
 	mraa_gpio_context chipSelect;
 	printf("Starting spRead.\n");
@@ -40,7 +40,8 @@ void * spRead() {
 		recv = mraa_spi_write_buf(spi, zero, 1);
 		response = response | recv[0];
 		response = map(response, 6, 979, 0, 100);
-		printf("value: %i", response);
+		printf("value: %i\n", response);
+		mraa_gpio_write(chipSelect, 1);
 		usleep(50000);
 	}
 
