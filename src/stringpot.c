@@ -5,11 +5,14 @@
  */
 
 #include <unistd.h>
-#include <math.h>
 #include <mraa/spi.h>
 #include <mraa/gpio.h>
 #include <stdio.h>
 #include "prototypes.h"
+
+int map(int input, int in_start, int in_end, int out_start, int out_end) {
+	return (input - in_start) * (out_end - out_start) / (in_end - in_start) + out_start;
+}
 
 void * spRead() {
 	const int spi_dev_num = 5;
@@ -28,33 +31,18 @@ void * spRead() {
 	uint8_t zero[] = {0x00};
 	uint8_t * recv;
 
-	int in_start = 6;
-	int in_end = 979;
-	int out_start = 0;
-	int out_end = 100;
-
-	double slope = 1.0 * (out_end - out_start) / (in_end - in_start);
-
 	while (1) {
-		mraa_gpio_write(chipSelect, 0);		
+		mraa_gpio_write(chipSelect, 0);
 		recv = mraa_spi_write_buf(spi, data, 1);
 		response = recv[0];
 		response = response & 0x03;
 		response = response << 8;
 		recv = mraa_spi_write_buf(spi, zero, 1);
 		response = response | recv[0];
-		response = map(response);
+		response = map(response, 6, 979, 0, 100);
 		printf("value: %i", response);
 		usleep(50000);
 	}
 
 	return NULL;
-}
-
-double round(double d) {
-	return floor(d + 0.5);
-}
-
-int map(int input) {
-	return out_start + round(slope * (input - in_start));
 }
