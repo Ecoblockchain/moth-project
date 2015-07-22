@@ -10,16 +10,9 @@
 #define MAX_THREADS 2
 
 int main() {
-	pthread_t threads[MAX_THREADS];
+	pthread_t thread;
 
-	/* pthread_create(&threads[0], NULL, gpsRead, NULL); */
-	pthread_create(&threads[1], NULL, spRead, NULL);
-	pthread_join(threads[1], NULL);
-
-	/* int i; */
-	/* for (i = 0; i < MAX_THREADS; i++) { */
-	/* 	pthread_join(threads[i], NULL); */
-	/* } */
+	pthread_create(&thread, NULL, gpsRead, NULL);
 
 	return 0;
 }
