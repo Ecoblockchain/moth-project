@@ -119,7 +119,6 @@ void parse_rmc(char *buffer){
 		log_array[LONGITUDE] = convert(atof(array[5]),array[6][0]);
 		log_array[COG] = atof(array[8]);
 		log_array[SOG] = atof(array[7]);
-		log_array[VARIATION] = convert2(atof(array[10]),array[11][0]);
 		//printf("** variation %s %s %.2f\n",array[10],array[11],log_array[VARIATION]);
 	pthread_mutex_unlock(&log_lock);
 	if (file_open == 0) open_file(array[1],array[9]);

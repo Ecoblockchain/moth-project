@@ -14,7 +14,7 @@
 volatile int tty_fd_gps;
 
 // used by verify_nmea
-void btoh(unsigned char c, char *str){
+void btoh(unsigned char c, char *str) {
 	unsigned char x;
 	x = c >> 4;
 	str[0] = x + (x > 9? 'A'-10: '0');
@@ -71,6 +71,9 @@ void initGps() {
 	cfsetspeed(&tio, B9600);
 	cfmakeraw(&tio);
 	tcsetattr(tty_fd_gps, TCSANOW, &tio);
+	char rateSetting[51];
+	sprintf(rateSetting, "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n");
+	write(tty_fd_gps, rateSetting, 51);
 }
 
 // read from the gps forever
@@ -89,7 +92,7 @@ void * gpsRead() {
 			local_buffer[idx++] = aa;
 			if (idx > 400) {
 				// prevent segmentation faults
-				idx = 0; 
+				idx = 0;
 				printf("\nGR ***********************************************\nlocal_buffer overflow in read nmea.\n Connect inputs and Cycle power to recover\n*****************************************\n");
 				int flag = 1;
 				char old = 'x';
@@ -111,7 +114,7 @@ void * gpsRead() {
 				} else if (strstr(local_buffer, "RMC")) {
 					// GPS Sentence
 					printf("GR %s", local_buffer);
-					parse_rmc(local_buffer);
+					//parse_rmc(local_buffer);
 				}
 			}
 		}
