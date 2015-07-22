@@ -2,50 +2,54 @@
  * log.h
  *
  *  Created on: Jan 28, 2015
- *      Author: Doris
+ *      Authors: Doris, James Vaughan
  */
 
 #ifndef LOG_H_
 #define LOG_H_
 
-#define		DATE	0
-#define		TIME	1
-#define		LATITUDE	2
-#define		LONGITUDE	3
-#define		SOG	4
-#define		COG	5
-#define		RAW_DEPTH	6
-#define		RAW_HEEL	7
-#define		RAW_LEEWAY	8
-#define		RAW_TWA	9
-#define		RAW_TWS	10
-#define		CORRECTED_AWA	11
-#define		CORRECTED_AWS	12
-#define		CORRECTED_BS	13
-#define		CORRECTED_HDG	14
-#define		CORRECTED_DEPTH	15
-#define		CORRECTED_HEEL	16
-#define		CORRECTED_LEEWAY	17
-#define		CORRECTED_TWS	18
-#define		CORRECTED_TWA	19
-#define		CORRECTED_TWD	20
-#define		CALCULATED_TWS	21
-#define		CALCULATED_TWA	22
-#define		CALCULATED_TWD	23
-#define		TWS	24
-#define		TWA	25
-#define		TWD	26
-#define		TAC_TWD_CORRECTION	27
-#define		TAC_TWS_CORRECTION	28
-#define		RAW_AWA	29
-#define		RAW_AWS	30
-#define		RAW_BS	31
-#define		RAW_HDG	32
-#define		VARIATION	33
-#define		CURRENT_KT	34
-#define		CURRENT_DIR	35
-#define		LOG_ARRAY_MAX	6
+#define	DATE	0
+#define	TIME_1	1
+#define	LATITUDE	2
+#define	LONGITUDE	3
+#define	SOG	4
+#define	COG	5
+#define SONAR_1 6
+#define SONAR_2 7
+#define SONAR_3 8
+#define SONAR_4 9
+#define RAW_RMC 10
+#define	LOG_1_ARRAY_MAX	11
 
-
+#define TIME_2 0
+#define ACC_X 1
+#define ACC_Y 2
+#define ACC_Z 3
+#define ANG_X 4
+#define ANG_Y 5
+#define ANG_Z 6
+#define TEMP 7
+#define COMPASS_X 8
+#define COMPASS_Y 9
+#define COMPASS_Z 10
+#define HEADING 11
+#define DIRECTION 12
+#define ANALOG_0 13
+#define ANALOG_1 14
+#define ANALOG_2 15
+#define ANALOG_3 16
+#define ANALOG_4 17
+#define ANALOG_5 18
+#define RAW_ACC_X 19
+#define RAW_ACC_Y 20
+#define RAW_ACC_Z 21
+#define RAW_ANG_X 22
+#define RAW_ANG_Y 23
+#define RAW_ANG_Z 24
+#define RAW_TEMP 25
+#define RAW_COMPASS_X 26
+#define RAW_COMPASS_Y 27
+#define RAW_COMPASS_Z 28
+#define	LOG_2_ARRAY_MAX	29
 
 #endif /* LOG_H_ */
