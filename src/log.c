@@ -5,7 +5,6 @@
  *     Authors: Allen Edwards, James Vaughan
  */
 
-#include "defines.h"
 #include "prototypes.h"
 #include <pthread.h>
 #include <stdio.h>
@@ -17,7 +16,7 @@
 pthread_mutex_t log_lock = PTHREAD_MUTEX_INITIALIZER;
 FILE *fp;
 char filename[50];
-double log_array[LOG_ARRAY_MAX];
+double log_array[LOG_1_ARRAY_MAX];
 int file_open = 0;
 char mark[20] = "";
 
@@ -40,7 +39,7 @@ double convert2(double number, char direction){
 
 
 void save_log_value(int index, double data){
-	if(index < 0 || index >= LOG_ARRAY_MAX)return;
+	if(index < 0 || index >= LOG_1_ARRAY_MAX)return;
 	pthread_mutex_lock(&log_lock);
 		//printf("** Saving %f.2 in %d\n",data, index);
 		log_array[index] = data;
@@ -72,7 +71,7 @@ void write_log_row(){
 	int i = 0;
 	fprintf(fp,"%d\t",j++);
 	pthread_mutex_lock(&log_lock);
-		for (i = 0 ; i < LOG_ARRAY_MAX ; i++){
+		for (i = 0 ; i < LOG_1_ARRAY_MAX ; i++){
 			fprintf(fp,"%0.6f\t",log_array[i]);
 		}
 		fprintf(fp,"%s\n",mark);
@@ -108,23 +107,20 @@ void log_error(char *message) {
 void parse_rmc(char *buffer){
 	char local_buffer[100];
     strcpy(local_buffer, buffer);
-    //printf("** %s\n",local_buffer);
     char *array[50];
     char sep[] = "*,";
     str_split(array, local_buffer+3, sep, 50);
 	pthread_mutex_lock(&log_lock);
-		log_array[TIME] = atof(array[1]);
+		log_array[TIME_1] = atof(array[1]);
 		log_array[DATE] = atof(array[9]);
 		log_array[LATITUDE] = convert(atof(array[3]),array[4][0]);
 		log_array[LONGITUDE] = convert(atof(array[5]),array[6][0]);
 		log_array[COG] = atof(array[8]);
 		log_array[SOG] = atof(array[7]);
-		//printf("** variation %s %s %.2f\n",array[10],array[11],log_array[VARIATION]);
 	pthread_mutex_unlock(&log_lock);
 	if (file_open == 0) open_file(array[1],array[9]);
 	if (file_open == 1) {
 		write_log_row();
-		//printf("** Writing line to file\n");
 	}
 }
 
