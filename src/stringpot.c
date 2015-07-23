@@ -23,7 +23,7 @@ void * spRead() {
 
 	spi = mraa_spi_init(spi_dev_num);
 	chipSelect = mraa_gpio_init(chipSelectPin);
-	mraa_gpio_mode(chipSelect, MRAA_GPIO_OUT_HIGH);
+	mraa_gpio_dir(chipSelect, MRAA_GPIO_OUT_HIGH);
 	printf("Initialized SPI\n");
 
 	unsigned int response = 0;

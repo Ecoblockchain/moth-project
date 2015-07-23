@@ -21,19 +21,16 @@ int file_open = 0;
 char mark[20] = "";
 
 double convert(double number, char direction){
-        //printf ("%f.2 -> ",number);
         double latlong = number;
         int degrees = (int)(latlong / 100);
         latlong = latlong - degrees * 100; // these are minutes
         latlong = ( degrees + latlong / 60 );
         if ( direction == 'S'  || direction == 'W' ) latlong = -latlong;
-        //printf("%.5f\n",latlong);
         return latlong;
 }
 
 double convert2(double number, char direction){
         if ( direction == 'S'  || direction == 'W' ) number = -number;
-        //printf("%.5f\n",latlong);
         return number;
 }
 
@@ -41,7 +38,6 @@ double convert2(double number, char direction){
 void save_log_value(int index, double data){
 	if(index < 0 || index >= LOG_1_ARRAY_MAX)return;
 	pthread_mutex_lock(&log_lock);
-		//printf("** Saving %f.2 in %d\n",data, index);
 		log_array[index] = data;
 	pthread_mutex_unlock(&log_lock);
 }
@@ -60,7 +56,7 @@ void open_file(char *time, char *date){
 	sprintf(filename,"/home/root/log/log_%s.txt",timestamp);
 	fp=fopen(filename, "w");
 	file_open = 1;
-	fprintf(fp, "ROW\tDATE\tTIME\tLONGITUDE\tSOG\tCOG\n");
+	fprintf(fp, "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
 	fclose(fp);
 }
 
@@ -77,6 +73,13 @@ void write_log_row(){
 		fprintf(fp,"%s\n",mark);
 	pthread_mutex_unlock(&log_lock);
 	fclose(fp);
+}
+
+void parseSonar(int index, int value) {
+	if(index < 0 || index >= LOG_1_ARRAY_MAX)return;
+	pthread_mutex_lock(&log_lock);
+		log_array[index] = value;
+	pthread_mutex_unlock(&log_lock);
 }
 
 void log_error(char *message) {

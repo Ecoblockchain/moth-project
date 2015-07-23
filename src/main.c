@@ -10,14 +10,13 @@
 #define MAX_THREADS 2
 
 int main() {
-	pthread_t thread;
+	pthread_t gpsThread;
+	pthread_t sonarThread;
 
-	pthread_create(&thread, NULL, gpsRead, NULL);
-	pthread_join(thread, NULL);
-
-	/* int i; */
-	/* for (i = 0; i < MAX_THREADS; i++) { */
-	/* 	pthread_join(threads[i], NULL); */
-	/* } */
+	pthread_create(&gpsThread, NULL, gpsRead, NULL);
+	pthread_create(&sonarThread, NULL, gpsRead, NULL);
+	pthread_join(gpsThread, NULL);
+	pthread_join(sonarThread, NULL);
+	
 	return 0;
 }

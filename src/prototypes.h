@@ -33,6 +33,7 @@ void parse_rmc(char*);
 void save_log_value(int, double);
 void write_log();
 void log_error(char *message);
+void parseSonar(int index, int value);
 
 // main
 void * gpsRead();

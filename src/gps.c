@@ -65,7 +65,7 @@ int verify_nmea(char *string){
 
 // initialize the gps
 void initGps() {
-	char *rateSetting = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n\0";
+	char *dataSetting = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n\0";
 	char *baudSetting = "$PMTK251,115200*1F\r\n\0";
 	char *freqSetting = "$PMTK220,100*2F\r\n\0";
 	tty_fd_gps = open("/dev/ttyMFD1", O_RDWR);
@@ -79,12 +79,12 @@ void initGps() {
 	cfsetspeed(&tio, B115200);
 	cfmakeraw(&tio);
 	tcsetattr(tty_fd_gps, TCSADRAIN, &tio);
-	write(tty_fd_gps, rateSetting, strlen(rateSetting));
+	write(tty_fd_gps, dataSetting, strlen(dataSetting));
 	write(tty_fd_gps, freqSetting, strlen(freqSetting));
 }
 
 // read from the gps forever
-void * gpsRead() {
+void* gpsRead() {
 	printf("GPS read is running\n");
 	char aa;
 	char local_buffer[500];
@@ -118,15 +118,12 @@ void * gpsRead() {
 			if(verify_nmea(local_buffer) == 0) {
 				if (strstr(local_buffer,",,,,,") && strstr(local_buffer, "RMC")){
 					printf("ST GPS Not Ready %s\n",local_buffer);
-				//} else if (strstr(local_buffer, "RMC")) {
-				} else {
+				} else if (strstr(local_buffer, "RMC")) {
 					// GPS Sentence
 					printf("GR %s", local_buffer);
-					//parse_rmc(local_buffer);
+					parse_rmc(local_buffer);
 				}
 			}
 		}
 	}
-
-	return NULL;
 }

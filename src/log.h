@@ -18,8 +18,7 @@
 #define SONAR_2 7
 #define SONAR_3 8
 #define SONAR_4 9
-#define RAW_RMC 10
-#define	LOG_1_ARRAY_MAX	11
+#define	LOG_1_ARRAY_MAX	10
 
 #define TIME_2 0
 #define ACC_X 1
