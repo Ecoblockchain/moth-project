@@ -5,7 +5,7 @@
  *     Authors: Allen Edwards, James Vaughan
  */
 
-#include "prototypes.h"
+#include "shared.h"
 #include <pthread.h>
 #include <sys/types.h>
 #include <sys/stat.h>
