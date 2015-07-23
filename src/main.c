@@ -7,13 +7,13 @@
 #include <pthread.h>
 #include "prototypes.h"
 
-#define MAX_THREADS 1
+#define MAX_THREADS 2
 
 pthread_t threads[MAX_THREADS];
 
 void startAll() {
 	pthread_create(&threads[0], NULL, sonarRead, NULL);
-	//pthread_create(&threads[1], NULL, gpsRead, NULL);
+	pthread_create(&threads[1], NULL, gpsRead, NULL);
 }
 
 void cancelAll() {
