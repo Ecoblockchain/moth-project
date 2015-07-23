@@ -13,8 +13,10 @@ void pingSonar(int id) {
 }
 
 int updateSonar(int id) {
+  uint8_t buf[2];
   mraa_i2c_address(i2c, sonar[id]);
-  return ((int) mraa_i2c_read_byte(i2c) << 8) | mraa_i2c_read_byte(i2c);
+  mraa_i2c_read(i2c, buf, 2);
+  return ((int) buf[0] << 8) | buf[1];
 }
 
 void* sonarRead() {
