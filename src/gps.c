@@ -121,7 +121,8 @@ void * gpsRead() {
 			if(verify_nmea(local_buffer) == 0) {
 				if (strstr(local_buffer,",,,,,") && strstr(local_buffer, "RMC")){
 					printf("ST GPS Not Ready %s\n",local_buffer);
-				} else if (strstr(local_buffer, "RMC")) {
+				//} else if (strstr(local_buffer, "RMC")) {
+				} else {
 					// GPS Sentence
 					printf("GR %s", local_buffer);
 					//parse_rmc(local_buffer);
