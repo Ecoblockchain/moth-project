@@ -4,10 +4,10 @@ CC=gcc
 CFLAGS=-Wall -pthread -lmraa
 FILE=moth
 
-_OBJ=main.o gps.o stringpot.o log.o led.o
+_OBJ=main.o gps.o stringpot.o log.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
-_HEADERS=prototypes.h log.h defines.h
+_HEADERS=prototypes.h log.h log.h
 HEADERS=$(patsubst %,src/%,$(_HEADERS))
 
 $(ODIR)/%.o: src/%.c $(HEADERS)
