@@ -17,7 +17,7 @@
 
 pthread_mutex_t log_lock = PTHREAD_MUTEX_INITIALIZER;
 FILE *fp;
-char filename[50];
+char filename_1[50];
 double log_array[LOG_1_ARRAY_MAX];
 int file_open = 0;
 char mark[20] = "";
@@ -67,18 +67,18 @@ void open_file(char *time, char *date){
   if (stat(folder, &st)) {
     mkdir(folder, 0700);
   }
-	sprintf(filename,"%s/log_%s.txt", folder, timestamp);
-	fp=fopen(filename, "w");
+	sprintf(filename_1,"%s/log_%s.txt", folder, timestamp);
+	fp=fopen(filename_1, "w");
 	file_open = 1;
 	fprintf(fp, "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
 	fclose(fp);
 }
 
 void write_log_row(){
-  printf("** Writing to Log Row in %s\n",filename);
-	fp=fopen(filename, "a");
+  printf("** Writing to Log Row in %s\n",filename_1);
+	fp=fopen(filename_1, "a");
   if (fp == NULL) {
-    printf("FAILED TO OPEN FILE=====================================\n");
+    printf("FAILED TO OPEN FILE\n");
   }
 	static int j = 1;
 	int i = 0;
@@ -105,7 +105,7 @@ void parseSonar(int index, int value) {
 }
 
 void log_error(char *message) {
-	fp = fopen(filename, "a");
+	fp = fopen(filename_1, "a");
 	pthread_mutex_lock(&log_lock);
 		fprintf(fp, "%s\n", message);
 	pthread_mutex_lock(&log_lock);
