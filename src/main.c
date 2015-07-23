@@ -7,19 +7,20 @@
 #include <pthread.h>
 #include "prototypes.h"
 
-#define MAX_THREADS 2
+#define MAX_THREADS 1
 
-pthread_t gpsThread;
-pthread_t sonarThread;
+pthread_t threads[MAX_THREADS];
 
 void startAll() {
-	pthread_create(&gpsThread, NULL, gpsRead, NULL);
-	pthread_create(&sonarThread, NULL, sonarRead, NULL);
+	pthread_create(&threads[0], NULL, sonarRead, NULL);
+	//pthread_create(&threads[1], NULL, gpsRead, NULL);
 }
 
 void cancelAll() {
-	pthread_cancel(gpsThread);
-	pthread_cancel(sonarThread);
+	int i;
+	for (i = 0; i < MAX_THREADS; i++) {
+		pthread_cancel(threads[i]);
+	}
 }
 
 int main() {
