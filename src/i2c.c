@@ -27,15 +27,15 @@ void* sonarRead() {
   usleep(40000);
   while(1) {
     parseSonar(SONAR_1, updateSonar(0));
-    pingSonar(2);
+    //pingSonar(2);
     usleep(40000);
     parseSonar(SONAR_2, updateSonar(1));
-    pingSonar(3);
+    //pingSonar(3);
     usleep(40000);
-    parseSonar(SONAR_3, updateSonar(2));
+    //parseSonar(SONAR_3, updateSonar(2));
     pingSonar(0);
     usleep(40000);
-    parseSonar(SONAR_4, updateSonar(3));
+    //parseSonar(SONAR_4, updateSonar(3));
     pingSonar(1);
     usleep(40000);
   }
