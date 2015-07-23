@@ -81,6 +81,9 @@ void initGps() {
 	char rateSetting[51];
 	sprintf(rateSetting, "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n");
 	write(tty_fd_gps, rateSetting, 51);
+	char freqSetting[17];
+	sprintf(freqSetting, "$PMTK220,100*2F\r\n");
+	write(tty_fd_gps, rateSetting, 17);
 }
 
 // read from the gps forever
