@@ -12,7 +12,7 @@
 
 #define MAX_THREADS 2
 #define STATUS_LED 15
-#define TOGGLER 31
+#define TOGGLER 45
 
 pthread_t threads[MAX_THREADS];
 mraa_gpio_context status;
@@ -68,5 +68,6 @@ int main() {
 
 	mraa_gpio_write(status, 0);
 	mraa_gpio_close(status);
+	mraa_gpio_close(toggler);
 	return 0;
 }
