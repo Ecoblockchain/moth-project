@@ -68,7 +68,11 @@ void write_log_row(){
 	fprintf(fp,"%d\t",j++);
 	pthread_mutex_lock(&log_lock);
 		for (i = 0 ; i < LOG_1_ARRAY_MAX ; i++){
-			fprintf(fp,"%0.6f\t",log_array[i]);
+      if (i == LATITUDE || i == LONGITUDE) {
+			  fprintf(fp,"%0.6f\t",log_array[i]);
+      } else {
+			  fprintf(fp,"%0.2f\t",log_array[i]);
+      }
 		}
 		fprintf(fp,"%s\n",mark);
 	pthread_mutex_unlock(&log_lock);
