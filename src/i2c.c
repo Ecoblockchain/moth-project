@@ -44,11 +44,11 @@ void* sonarRead() {
   sleep(1);
 	i2c = mraa_i2c_init(1);
   mraa_i2c_frequency(i2c, MRAA_I2C_STD);
+  sleep(1);
 
   pthread_t sonarThreads[MAX_SONARS];
   int* ids[MAX_SONARS];
   int i;
-  sleep(1);
   for (i = 0; i < MAX_SONARS; i++) {
     ids[i] = (int*) malloc(sizeof(int));
     *ids[i] = i;
