@@ -22,11 +22,6 @@ void updateSonar(int id) {
   mraa_i2c_read(i2c, buf, 2);
   value =  (buf[0] << 8) | buf[1];
   parseSonar(arrayValues[id], value);
-
-  printf("%i\t", value);
-  if (id == 1) {
-    printf("\n");
-  }
 }
 
 void* startSonar(void* id) {
