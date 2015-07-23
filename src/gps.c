@@ -91,6 +91,7 @@ void* gpsRead() {
 	char local_buffer[500];
 	int idx = 0;
 	initGps();
+	tcflush(tty_fd_gps, TCIFLUSH);
 	int read_more = 0;
 
 	while (1) {
