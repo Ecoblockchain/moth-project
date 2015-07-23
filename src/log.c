@@ -81,7 +81,7 @@ void write_log_row(){
       }
 		}
 		fprintf(fp,"%s\n",mark);
-    printf("%f\n", log_array[SONAR_1]);
+    printf("%f\t%f\n", log_array[SONAR_1], log_array[SONAR_2]);
 	pthread_mutex_unlock(&log_lock);
 	fclose(fp);
 }

@@ -4,7 +4,7 @@
 #include "log.h"
 #include "prototypes.h"
 
-uint8_t sonar[] = {0x02, 0x70, 0x70, 0x70};
+uint8_t sonar[] = {0x02, 0x70, 0x00, 0x00};
 mraa_i2c_context i2c;
 
 void pingSonar(int id) {
