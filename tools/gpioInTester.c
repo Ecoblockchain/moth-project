@@ -9,8 +9,8 @@ int main() {
   int status = mraa_gpio_read(pin);
   int otherStatus;
   while (1) {
-    otherStatus = mraa_gpio_read(pin);
     usleep(10000);
+    otherStatus = mraa_gpio_read(pin);
     if (status != otherStatus)
       printf("Change detected!\n");
     status = mraa_gpio_read(pin);
