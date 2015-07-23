@@ -65,8 +65,6 @@ int main() {
 		usleep(10000);
 	}
 
-	mraa_gpio_write(status, 0);
-	mraa_gpio_close(status);
 	mraa_gpio_close(toggler);
 	return 0;
 }
