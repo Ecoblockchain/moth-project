@@ -35,13 +35,19 @@ double convert2(double number, char direction){
 }
 
 
-void save_log_value(int index, double data){
-	if(index < 0 || index >= LOG_1_ARRAY_MAX)return;
+void save_log_value(int index, double data) {
+	if(index < 0 || index >= LOG_1_ARRAY_MAX) return;
 	pthread_mutex_lock(&log_lock);
 		log_array[index] = data;
 	pthread_mutex_unlock(&log_lock);
 }
 
+double get_log_value(int index) {
+	if(index < 0 || index >= LOG_1_ARRAY_MAX) return 0;
+	pthread_mutex_lock(&log_lock);
+		return log_array[index];
+	pthread_mutex_unlock(&log_lock);
+}
 
 void open_file(char *time, char *date){
 	if (file_open == 1) return;

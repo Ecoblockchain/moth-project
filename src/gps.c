@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "prototypes.h"
+#include "log.h"
 
 volatile int tty_fd_gps;
 
@@ -120,7 +121,7 @@ void* gpsRead() {
 					printf("ST GPS Not Ready %s\n",local_buffer);
 				} else if (strstr(local_buffer, "RMC")) {
 					// GPS Sentence
-					printf("GR %s", local_buffer);
+					printf("GR\t%f\t%s", get_log_value(SONAR_1), local_buffer);
 					parse_rmc(local_buffer);
 				}
 			}
