@@ -75,7 +75,7 @@ void open_file(char *time, char *date){
 }
 
 void write_log_row(){
-	//printf("** Writing to Log Row in %s\n",filename);
+  printf("** Writing to Log Row in %s\n",filename);
 	fp=fopen(filename, "a");
 	static int j = 1;
 	int i = 0;
@@ -98,6 +98,7 @@ void parseSonar(int index, int value) {
 	if (index < 0 || index >= LOG_1_ARRAY_MAX) return;
 	pthread_mutex_lock(&log_lock);
 		log_array[index] = value;
+    printf("PARSED %i\n", value);
 	pthread_mutex_unlock(&log_lock);
 }
 
