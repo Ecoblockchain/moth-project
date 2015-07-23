@@ -4,6 +4,8 @@
 #include "log.h"
 #include "prototypes.h"
 
+#define MAX_SONARS 2
+
 uint8_t sonar[] = {0x02, 0x70, 0x00, 0x00};
 int arrayValues[] = {SONAR_1, SONAR_2, SONAR_3, SONAR_4};
 mraa_i2c_context i2c;
@@ -42,10 +44,10 @@ void* sonarRead() {
 	i2c = mraa_i2c_init(1);
   mraa_i2c_frequency(i2c, MRAA_I2C_STD);
 
-  pthread_t sonarThreads[4];
-  int* ids[4];
+  pthread_t sonarThreads[MAX_SONARS];
+  int* ids[MAX_SONARS];
   int i;
-  for (i = 0; i < 4; i++) {
+  for (i = 0; i < MAX_SONARS; i++) {
     ids[i] = (int*) malloc(sizeof(int));
     *ids[i] = i;
     pthread_create(&sonarThreads[i], NULL, startSonar, (void*) ids[i]);
