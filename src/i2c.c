@@ -14,7 +14,8 @@ void pingSonar(int id) {
 
 int updateSonar(int id) {
   mraa_i2c_address(i2c, sonar[id]);
-  return ((int) mraa_i2c_read_byte(i2c) << 8) | mraa_i2c_read_byte(i2c);
+  //return ((int) mraa_i2c_read_byte(i2c) << 8) | mraa_i2c_read_byte(i2c);
+  return 500;
 }
 
 void* sonarRead() {
