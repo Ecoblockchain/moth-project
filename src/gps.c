@@ -65,7 +65,7 @@ int verify_nmea(char *string){
 
 // initialize the gps
 void initGps() {
-	char *rateSetting = "$PMTK314,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n\0";
+	char *rateSetting = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n\0";
 	char *baudSetting = "$PMTK251,115200*1F\r\n\0";
 	char *freqSetting = "$PMTK220,100*2F\r\n\0";
 	tty_fd_gps = open("/dev/ttyMFD1", O_RDWR);
