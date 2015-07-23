@@ -17,7 +17,7 @@
 
 pthread_mutex_t log_lock = PTHREAD_MUTEX_INITIALIZER;
 FILE *fp;
-char filename_1[50];
+char filename_1[100];
 double log_array[LOG_1_ARRAY_MAX];
 int file_open = 0;
 char mark[20] = "";
@@ -67,7 +67,7 @@ void open_file(char *time, char *date){
   if (stat(folder, &st)) {
     mkdir(folder, 0700);
   }
-	sprintf(filename_1,"%s/log_%s.txt", folder, timestamp);
+	sprintf(filename_1,"%s/log_%s.txt\0", folder, timestamp);
 	fp=fopen(filename_1, "w");
 	file_open = 1;
 	fprintf(fp, "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
