@@ -35,9 +35,7 @@ void* startSonar(void* id) {
 }
 
 void* sonarRead() {
-  sleep(1);
 	i2c = mraa_i2c_init(1);
-  sleep(1);
   mraa_i2c_frequency(i2c, MRAA_I2C_STD);
 
   pthread_t sonarThreads[MAX_SONARS];
