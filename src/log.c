@@ -71,7 +71,6 @@ void open_file(char *time, char *date){
 	fp=fopen(filename, "w");
 	file_open = 1;
 	fprintf(fp, "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
-  printf("finished opening file\n");
 	fclose(fp);
 }
 
@@ -96,7 +95,7 @@ void write_log_row(){
 }
 
 void parseSonar(int index, int value) {
-	if(index < 0 || index >= LOG_1_ARRAY_MAX)return;
+	if (index < 0 || index >= LOG_1_ARRAY_MAX) return;
 	pthread_mutex_lock(&log_lock);
 		log_array[index] = value;
 	pthread_mutex_unlock(&log_lock);
