@@ -44,6 +44,8 @@ int main() {
 	status = mraa_gpio_init(STATUS_LED);
 	mraa_gpio_dir(status, MRAA_GPIO_OUT_LOW);
 
+	signal(SIGINT, sig_handler);
+	
 	while (cont) {
 		if (1) { // start/stop button
 			if (!running) {
