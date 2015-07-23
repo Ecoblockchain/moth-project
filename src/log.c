@@ -67,7 +67,7 @@ void open_file(char *time, char *date){
   if (stat(folder, &st)) {
     mkdir(folder, 0700);
   }
-	sprintf(filename_1,"%s/log_%s.txt\0", folder, timestamp);
+	sprintf(filename_1,"%s/log_%s.txt", folder, timestamp);
 	fp=fopen(filename_1, "w");
 	file_open = 1;
 	fprintf(fp, "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
@@ -75,11 +75,7 @@ void open_file(char *time, char *date){
 }
 
 void write_log_row(){
-  printf("** Writing to Log Row in %s\n",filename_1);
 	fp=fopen(filename_1, "a");
-  if (fp == NULL) {
-    printf("FAILED TO OPEN FILE\n");
-  }
 	static int j = 1;
 	int i = 0;
 	fprintf(fp,"%d\t",j++);
