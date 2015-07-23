@@ -15,11 +15,15 @@
 #include <ctype.h>
 #include "log.h"
 
-pthread_mutex_t log_lock = PTHREAD_MUTEX_INITIALIZER;
-FILE *fp;
-char filename_1[100];
-double log_array[LOG_1_ARRAY_MAX];
-int file_open = 0;
+pthread_mutex_t lock_1 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t lock_2 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t* log_locks[] = {&lock_1, &lock_2};
+
+FILE* fp[2];
+char filenames[2][100];
+double log_arrays[2][LOG_1_ARRAY_MAX];
+int files_open = 0;
+int log_array_max[] = {LOG_1_ARRAY_MAX, LOG_2_ARRAY_MAX};
 char mark[20] = "";
 
 double convert(double number, char direction){
@@ -37,22 +41,15 @@ double convert2(double number, char direction){
 }
 
 
-void save_log_value(int index, double data) {
-	if(index < 0 || index >= LOG_1_ARRAY_MAX) return;
-	pthread_mutex_lock(&log_lock);
-		log_array[index] = data;
-	pthread_mutex_unlock(&log_lock);
+void save_log_value(int index, double data, int log) {
+	if(index < 0 || index >= log_array_max[log]) return;
+	pthread_mutex_lock(log_locks[log]);
+		log_arrays[log][index] = data;
+	pthread_mutex_unlock(log_locks[log]);
 }
 
-double get_log_value(int index) {
-	if(index < 0 || index >= LOG_1_ARRAY_MAX) return 0;
-	pthread_mutex_lock(&log_lock);
-		return log_array[index];
-	pthread_mutex_unlock(&log_lock);
-}
-
-void open_file(char *time, char *date){
-	if (file_open == 1) return;
+void open_files(char *time, char *date){
+	if (files_open == 1) return;
 	char timestamp[15];
 	sprintf(timestamp,"20%c%c%c%c%c%c%c%c%c%c.0",date[4],date[5],date[2],date[3],date[0],date[1],time[0],time[1],time[2],time[3]);
 	printf("ST Log File Opened  /home/root/log/log_%s\n",timestamp);
@@ -67,44 +64,41 @@ void open_file(char *time, char *date){
   if (stat(folder, &st)) {
     mkdir(folder, 0700);
   }
-	sprintf(filename_1,"%s/log_%s.txt", folder, timestamp);
-	fp=fopen(filename_1, "w");
-	file_open = 1;
-	fprintf(fp, "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
-	fclose(fp);
+	sprintf(filenames[0],"%s/log_%s_1.txt", folder, timestamp);
+	sprintf(filenames[1],"%s/log_%s_2.txt", folder, timestamp);
+	fp[0]=fopen(filenames[0], "w");
+	fp[1]=fopen(filenames[1], "w");
+	files_open = 1;
+	fprintf(fp[0], "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
+fprintf(fp[1], "ROW\tTIME\tACC_X\tACC_Y\tACC_Z\tANG_X\tANG_Y\tANG_Z\tTEMP\tCOMPASS_X\tCOMPASS_Y\tCOMPASS_Z\tHEADING\tDIRECTION\tANALOG_0\tANALOG_1\tANALOG_2\tANALOG_3\tANALOG_4\tANALOG_5\tRAW_ACC_X\tRAW_ACC_X\tRAW_ACC_Y\tRAW_ACC_Z\tRAW_ANG_X\tRAW_ANG_Y\tRAW_ANG_Z\tRAW_TEMP\tRAW_COMPASS_X\tRAW_COMPASS_Y\tRAW_COMPASS_Z\n");
+	fclose(fp[0]);
+	fclose(fp[1]);
 }
 
-void write_log_row(){
-	fp=fopen(filename_1, "a");
+void write_log_row(int log) {
+	fp[log] = fopen(filenames[log], "a");
 	static int j = 1;
 	int i = 0;
-	fprintf(fp,"%d\t",j++);
-	pthread_mutex_lock(&log_lock);
-		for (i = 0 ; i < LOG_1_ARRAY_MAX ; i++){
+	fprintf(fp[log],"%d\t",j++);
+	pthread_mutex_lock(log_locks[log]);
+		for (i = 0 ; i < log_array_max[log] ; i++){
       if (i == LATITUDE || i == LONGITUDE) {
-			  fprintf(fp,"%0.6f\t",log_array[i]);
+			  fprintf(fp[log],"%0.6f\t",log_arrays[log][i]);
       } else {
-			  fprintf(fp,"%0.2f\t",log_array[i]);
+			  fprintf(fp[log],"%0.2f\t",log_arrays[log][i]);
       }
 		}
-		fprintf(fp,"%s\n",mark);
-    //printf("%f\t%f\n", log_array[SONAR_1], log_array[SONAR_2]);
-	pthread_mutex_unlock(&log_lock);
-	fclose(fp);
+		fprintf(fp[log],"\n");
+    //printf("%f\t%f\n", log_1_array[SONAR_1], log_1_array[SONAR_2]);
+	pthread_mutex_unlock(log_locks[log]);
+	fclose(fp[log]);
 }
 
 void parseSonar(int index, int value) {
 	if (index < 0 || index >= LOG_1_ARRAY_MAX) return;
-	pthread_mutex_lock(&log_lock);
-		log_array[index] = value;
-	pthread_mutex_unlock(&log_lock);
-}
-
-void log_error(char *message) {
-	fp = fopen(filename_1, "a");
-	pthread_mutex_lock(&log_lock);
-		fprintf(fp, "%s\n", message);
-	pthread_mutex_lock(&log_lock);
+	pthread_mutex_lock(log_locks[0]);
+		log_arrays[0][index] = value;
+	pthread_mutex_unlock(log_locks[0]);
 }
 
 /***************************************************
@@ -131,17 +125,17 @@ void parse_rmc(char *buffer){
     char *array[50];
     char sep[] = "*,";
     str_split(array, local_buffer+3, sep, 50);
-	pthread_mutex_lock(&log_lock);
-		log_array[TIME_1] = atof(array[1]);
-		log_array[DATE] = atof(array[9]);
-		log_array[LATITUDE] = convert(atof(array[3]),array[4][0]);
-		log_array[LONGITUDE] = convert(atof(array[5]),array[6][0]);
-		log_array[COG] = atof(array[8]);
-		log_array[SOG] = atof(array[7]);
-	pthread_mutex_unlock(&log_lock);
-	if (file_open == 0) open_file(array[1],array[9]);
-	if (file_open == 1) {
-		write_log_row();
+	pthread_mutex_lock(log_locks[0]);
+		log_arrays[0][TIME_1] = atof(array[1]);
+		log_arrays[0][DATE] = atof(array[9]);
+		log_arrays[0][LATITUDE] = convert(atof(array[3]),array[4][0]);
+		log_arrays[0][LONGITUDE] = convert(atof(array[5]),array[6][0]);
+		log_arrays[0][COG] = atof(array[8]);
+		log_arrays[0][SOG] = atof(array[7]);
+	pthread_mutex_unlock(log_locks[0]);
+	if (files_open == 0) open_files(array[1],array[9]);
+	if (files_open == 1) {
+		write_log_row(0);
 	}
 }
 

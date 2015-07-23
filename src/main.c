@@ -62,7 +62,7 @@ int main() {
 				running = 0;
 			}
 		}
-		usleep(10000);
+		usleep(50000);
 	}
 
 	mraa_gpio_close(toggler);

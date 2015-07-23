@@ -16,8 +16,7 @@ int verify_nmea(char *);
 
 // log file
 void parse_rmc(char*);
-void save_log_value(int, double);
-double get_log_value(int);
+void save_log_value(int, double, int);
 void write_log();
 void log_error(char *message);
 void parseSonar(int index, int value);
