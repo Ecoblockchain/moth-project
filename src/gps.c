@@ -75,7 +75,7 @@ void initGps() {
 	sprintf(baudSetting, "$PMTK251,115200*1F\r\n");
 	//write(tty_fd_gps, baudSetting, 20);
 	tcgetattr(tty_fd_gps, &tio);
-	cfsetspeed(&tio, B115200);
+//	cfsetspeed(&tio, B115200);
 	cfmakeraw(&tio);
 	tcsetattr(tty_fd_gps, TCSADRAIN, &tio);
 	char rateSetting[51];
