@@ -8,9 +8,6 @@
 #ifndef PROTOTYPES_H_
 #define PROTOTYPES_H_
 
-#include <pthread.h>
-#include "defines.h"
-
 int str_split(char**, char*, char*, int);
 int verify_nmea(char *);
 
@@ -25,7 +22,5 @@ void parseSonar(int index, int value);
 void * gpsRead();
 void * spRead();
 void * sonarRead();
-
-extern pthread_t threads[MAX_THREADS];
 
 #endif /* PROTOTYPES_H_ */
