@@ -65,25 +65,22 @@ int verify_nmea(char *string){
 
 // initialize the gps
 void initGps() {
+	char *rateSetting = "$PMTK314,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n\0";
+	char *baudSetting = "$PMTK251,115200*1F\r\n\0";
+	char *freqSetting = "$PMTK220,100*2F\r\n\0";
 	tty_fd_gps = open("/dev/ttyMFD1", O_RDWR);
 	struct termios tio;
 	tcgetattr(tty_fd_gps, &tio);
 	cfsetspeed(&tio, B9600);
 	cfmakeraw(&tio);
 	tcsetattr(tty_fd_gps, TCSANOW, &tio);
-	char baudSetting[20];
-	sprintf(baudSetting, "$PMTK251,115200*1F\r\n");
-	//write(tty_fd_gps, baudSetting, 20);
+	write(tty_fd_gps, baudSetting, strlen(baudSetting));
 	tcgetattr(tty_fd_gps, &tio);
-//	cfsetspeed(&tio, B115200);
+	cfsetspeed(&tio, B115200);
 	cfmakeraw(&tio);
 	tcsetattr(tty_fd_gps, TCSADRAIN, &tio);
-	char rateSetting[51];
-	sprintf(rateSetting, "$PMTK314,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n");
-	write(tty_fd_gps, rateSetting, 51);
-	char freqSetting[17];
-	sprintf(freqSetting, "$PMTK220,100*2F\r\n");
-	write(tty_fd_gps, rateSetting, 17);
+	write(tty_fd_gps, rateSetting, strlen(rateSetting));
+	write(tty_fd_gps, freqSetting, strlen(freqSetting));
 }
 
 // read from the gps forever
