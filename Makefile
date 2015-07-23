@@ -7,7 +7,7 @@ FILE=moth
 _OBJ=main.o gps.o stringpot.o log.o i2c.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
-_HEADERS=hared.h log.h defines.h
+_HEADERS=shared.h log.h defines.h
 HEADERS=$(patsubst %,src/%,$(_HEADERS))
 
 $(ODIR)/%.o: src/%.c $(HEADERS)
