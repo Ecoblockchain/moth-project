@@ -5,7 +5,6 @@
 #include "prototypes.h"
 
 uint8_t sonar[] = {0x02, 0x70, 0x00, 0x00};
-int sonarValues[4];
 int arrayValues[] = {SONAR_1, SONAR_2, SONAR_3, SONAR_4};
 mraa_i2c_context i2c;
 
@@ -30,6 +29,7 @@ void updateSonar(int id) {
 
 void* startSonar(void* id) {
   int myID = *((int*) id);
+  printf("started thread with id: %i\n", myID);
   while (1) {
     pingSonar(myID);
     usleep(80000);
