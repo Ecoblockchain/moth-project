@@ -22,7 +22,7 @@ void updateSonar(int id) {
   value =  (buf[0] << 8) | buf[1];
   parseSonar(arrayValues[id], value);
 
-  printf("%i\t", sonarValues[id]);
+  printf("%i\t", value);
   if (id == 1) {
     printf("\n");
   }
