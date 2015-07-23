@@ -57,7 +57,8 @@ int main() {
 			}
 		}
 	}
-	
+
+	mraa_gpio_write(status, 0);
 	mraa_gpio_close(status);
 	return 0;
 }
