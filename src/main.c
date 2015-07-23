@@ -12,6 +12,7 @@
 
 #define MAX_THREADS 2
 #define STATUS_LED 15
+#define TOGGLER 31
 
 pthread_t threads[MAX_THREADS];
 mraa_gpio_context status;
@@ -41,13 +42,18 @@ void sig_handler(int signo) {
 int main() {
 	int running = 0;
 	cont = 1;
+	int toggleOn;
+	mraa_gpio_context toggler;
+	toggler = mraa_gpio_init(TOGGLER);
 	status = mraa_gpio_init(STATUS_LED);
 	mraa_gpio_dir(status, MRAA_GPIO_OUT_LOW);
+	mraa_gpio_dir(toggler, MRAA_GPIO_IN);
 
 	signal(SIGINT, sig_handler);
-	
+
 	while (cont) {
-		if (1) { // start/stop button
+		toggleOn = mraa_gpio_read(toggler);
+		if (toggleOn) { // start/stop button
 			if (!running) {
 				startAll();
 				running = 1;
