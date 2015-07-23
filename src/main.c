@@ -10,10 +10,7 @@
 #include <signal.h>
 #include <mraa/gpio.h>
 #include "prototypes.h"
-
-#define MAX_THREADS 2
-#define STATUS_LED 15
-#define TOGGLER 45
+#include "defines.h"
 
 pthread_t threads[MAX_THREADS];
 mraa_gpio_context status;
