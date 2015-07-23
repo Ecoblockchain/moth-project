@@ -7,6 +7,8 @@
 
 #include "prototypes.h"
 #include <pthread.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -52,14 +54,20 @@ double get_log_value(int index) {
 void open_file(char *time, char *date){
 	if (file_open == 1) return;
 	char timestamp[15];
-	sprintf(timestamp,"20%c%c%c%c%c%c%c%c%c%c.0",date[4],date[5],date[2],date[3],date[0],date[1],time[0],time[1],time[2],time[3]);
+	sprintf(timestamp,"20%c%c%c%c%c%c%c%c%c%c",date[4],date[5],date[2],date[3],date[0],date[1],time[0],time[1],time[2],time[3]);
 	printf("ST Log File Opened  /home/root/log/log_%s\n",timestamp);
 	char sys[25];
 	strcpy(sys,"date ");
 	strcat(sys,timestamp);
 	system(sys);
 	timestamp[12] = '\0';
-	sprintf(filename,"/home/root/log/log_%s.txt",timestamp);
+  struct stat st = {0};
+  char folder[35];
+  sprintf(folder, "/home/root/log/log_%s", timestamp);
+  if (stat(folder, &st)) {
+    mkdir(folder, 0700);
+  }
+	sprintf(filename,"%s/log_%s.txt", folder, timestamp);
 	fp=fopen(filename, "w");
 	file_open = 1;
 	fprintf(fp, "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
