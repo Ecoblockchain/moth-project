@@ -71,6 +71,7 @@ void open_file(char *time, char *date){
 	fp=fopen(filename, "w");
 	file_open = 1;
 	fprintf(fp, "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
+  printf("finished opening file\n");
 	fclose(fp);
 }
 
