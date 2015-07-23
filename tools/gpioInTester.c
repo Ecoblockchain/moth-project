@@ -1,4 +1,5 @@
 #include <mraa/gpio.h>
+#include <unistd.h>
 #include <stdio.h>
 
 int main() {
@@ -9,6 +10,7 @@ int main() {
   int otherStatus;
   while (1) {
     otherStatus = mraa_gpio_read(pin);
+    usleep(10000);
     if (status != otherStatus)
       printf("Change detected!\n");
     status = mraa_gpio_read(pin);
