@@ -12,10 +12,9 @@
 int main() {
 	pthread_t gpsThread;
 	pthread_t sonarThread;
-
-//	pthread_create(&gpsThread, NULL, gpsRead, NULL);
+	pthread_create(&gpsThread, NULL, gpsRead, NULL);
 	pthread_create(&sonarThread, NULL, sonarRead, NULL);
-	//pthread_join(gpsThread, NULL);
+	pthread_join(gpsThread, NULL);
 	pthread_join(sonarThread, NULL);
 
 	return 0;
