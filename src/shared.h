@@ -7,28 +7,14 @@
 
 #ifndef PROTOTYPES_H_
 #define PROTOTYPES_H_
-int create_nmea(char*);
-void init_tty();
-void sendLine(char*);
-void sendNmea(char*);
-double get_heel();
+
+#include <pthread.h>
+#include "defines.h"
+
 int str_split(char**, char*, char*, int);
-void enter_test_mode(char**);
-void exit_text_mode();
-void init_cal_array_defaults();
-void save_cal_array(char*);
-void get_cal_string(char*, int);
-void read_cal_array(char*);
-void write_to_cal_array(int, double);
-void save_timestamp(char*);
-double read_from_cal_array(int);
-int str_split(char **, char *, char *, int );
-void load_cal_name();
-void nmea_write(char*);
 int verify_nmea(char *);
 
 // log file
-void parse_rmb(char*);
 void parse_rmc(char*);
 void save_log_value(int, double);
 double get_log_value(int);
@@ -41,5 +27,6 @@ void * gpsRead();
 void * spRead();
 void * sonarRead();
 
+extern pthread_t threads[MAX_THREADS];
 
 #endif /* PROTOTYPES_H_ */

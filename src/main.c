@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <mraa/gpio.h>
-#include "prototypes.h"
+#include "shared.h"
 #include "defines.h"
 
 pthread_t threads[MAX_THREADS];

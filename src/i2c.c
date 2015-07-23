@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "log.h"
-#include "prototypes.h"
+#include "shared.h"
 #include "defines.h"
 
 uint8_t sonar[] = {0x02, 0x04, 0x00, 0x00};

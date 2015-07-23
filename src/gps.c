@@ -9,7 +9,7 @@
 #include <termios.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include "prototypes.h"
+#include "shared.h"
 #include "log.h"
 
 volatile int tty_fd_gps;

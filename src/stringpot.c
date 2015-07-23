@@ -8,7 +8,7 @@
 #include <mraa/spi.h>
 #include <mraa/gpio.h>
 #include <stdio.h>
-#include "prototypes.h"
+#include "shared.h"
 
 int map(int input, int in_start, int in_end, int out_start, int out_end) {
 	return (input - in_start) * (out_end - out_start) / (in_end - in_start) + out_start;
