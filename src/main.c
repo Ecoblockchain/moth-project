@@ -5,13 +5,17 @@
  */
 
 #include <pthread.h>
+#include <errno.h>
+#include <signal.h>
 #include <mraa/gpio.h>
 #include "prototypes.h"
 
 #define MAX_THREADS 2
+#define STATUS_LED 15
 
 pthread_t threads[MAX_THREADS];
 mraa_gpio_context status;
+int cont;
 
 void startAll() {
 	pthread_create(&threads[0], NULL, sonarRead, NULL);
@@ -27,12 +31,20 @@ void cancelAll() {
 	mraa_gpio_write(status, 0);
 }
 
+void sig_handler(int signo) {
+    if (signo == SIGINT) {
+        printf("closing IO%d nicely\n", STATUS_LED);
+        cont = 0;
+    }
+}
+
 int main() {
 	int running = 0;
-	status = mraa_gpio_init(15);
+	cont = 1;
+	status = mraa_gpio_init(STATUS_LED);
 	mraa_gpio_dir(status, MRAA_GPIO_OUT_LOW);
 
-	while (1) {
+	while (cont) {
 		if (1) { // start/stop button
 			if (!running) {
 				startAll();
@@ -45,6 +57,7 @@ int main() {
 			}
 		}
 	}
-
+	
+	mraa_gpio_close(status);
 	return 0;
 }
