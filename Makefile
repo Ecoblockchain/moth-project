@@ -4,7 +4,7 @@ CC=gcc
 CFLAGS=-Wall -pthread -lmraa
 FILE=moth
 
-_OBJ=main.o gps.o stringpot.o log.o
+_OBJ=main.o gps.o stringpot.o log.o i2c.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
 _HEADERS=prototypes.h log.h log.h

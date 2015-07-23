@@ -38,7 +38,7 @@ void parseSonar(int index, int value);
 // main
 void * gpsRead();
 void * spRead();
-void * statusLED();
+void * sonarRead();
 
 
 #endif /* PROTOTYPES_H_ */
