@@ -19,7 +19,8 @@ int cont;
 void startAll() {
 	pthread_create(&threads[0], NULL, sonarRead, NULL);
 	pthread_create(&threads[1], NULL, gpsRead, NULL);
-	mraa_gpio_write(status, 1);
+	status = mraa_gpio_init(STATUS_LED);
+	mraa_gpio_dir(status, MRAA_GPIO_OUT_HIGH);
 }
 
 void cancelAll() {
@@ -28,6 +29,7 @@ void cancelAll() {
 		pthread_cancel(threads[i]);
 	}
 	mraa_gpio_write(status, 0);
+	mraa_gpio_close(status);
 }
 
 void sig_handler(int signo) {
@@ -43,8 +45,6 @@ int main() {
 	int toggleOn;
 	mraa_gpio_context toggler;
 	toggler = mraa_gpio_init(TOGGLER);
-	status = mraa_gpio_init(STATUS_LED);
-	mraa_gpio_dir(status, MRAA_GPIO_OUT_LOW);
 	mraa_gpio_dir(toggler, MRAA_GPIO_IN);
 
 	signal(SIGINT, sig_handler);
