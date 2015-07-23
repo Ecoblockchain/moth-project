@@ -48,6 +48,7 @@ void* sonarRead() {
   pthread_t sonarThreads[MAX_SONARS];
   int* ids[MAX_SONARS];
   int i;
+  sleep(1);
   for (i = 0; i < MAX_SONARS; i++) {
     ids[i] = (int*) malloc(sizeof(int));
     *ids[i] = i;
