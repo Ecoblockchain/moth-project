@@ -6,6 +6,7 @@
 
 #include <pthread.h>
 #include <errno.h>
+#include <unistd.h>
 #include <signal.h>
 #include <mraa/gpio.h>
 #include "prototypes.h"
@@ -64,6 +65,7 @@ int main() {
 				running = 0;
 			}
 		}
+		usleep(10000);
 	}
 
 	mraa_gpio_write(status, 0);
