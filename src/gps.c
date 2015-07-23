@@ -122,8 +122,6 @@ void* gpsRead() {
 				} else if (strstr(local_buffer, "RMC")) {
 					// GPS Sentence
 					printf("GR %s", local_buffer);
-					//double d = get_log_value(SONAR_1);
-					//printf("%f\n", d);
 					parse_rmc(local_buffer);
 				}
 			}
