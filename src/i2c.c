@@ -8,6 +8,7 @@
 uint8_t sonar[] = {0x02, 0x04, 0x00, 0x00};
 int arrayValues[] = {SONAR_1, SONAR_2, SONAR_3, SONAR_4};
 mraa_i2c_context i2c;
+pthread_t threads[MAX_THREADS];
 
 void pingSonar(int id) {
   mraa_i2c_address(i2c, sonar[id]);
