@@ -54,7 +54,7 @@ double get_log_value(int index) {
 void open_file(char *time, char *date){
 	if (file_open == 1) return;
 	char timestamp[15];
-	sprintf(timestamp,"20%c%c%c%c%c%c%c%c%c%c",date[4],date[5],date[2],date[3],date[0],date[1],time[0],time[1],time[2],time[3]);
+	sprintf(timestamp,"20%c%c%c%c%c%c%c%c%c%c.0",date[4],date[5],date[2],date[3],date[0],date[1],time[0],time[1],time[2],time[3]);
 	printf("ST Log File Opened  /home/root/log/log_%s\n",timestamp);
 	char sys[25];
 	strcpy(sys,"date ");
