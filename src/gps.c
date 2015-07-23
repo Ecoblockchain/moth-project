@@ -71,6 +71,13 @@ void initGps() {
 	cfsetspeed(&tio, B9600);
 	cfmakeraw(&tio);
 	tcsetattr(tty_fd_gps, TCSANOW, &tio);
+	char baudSetting[20];
+	sprintf(baudSetting, "$PMTK251,115200*1F\r\n");
+	write(tty_fd_gps, baudSetting, 20);
+	tcgetattr(tty_fd_gps, &tio);
+	cfsetspeed(&tio, B115200);
+	cfmakeraw(&tio);
+	tcsetattr(tty_fd_gps, TCSANOW, &tio);
 	char rateSetting[51];
 	sprintf(rateSetting, "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n");
 	write(tty_fd_gps, rateSetting, 51);
