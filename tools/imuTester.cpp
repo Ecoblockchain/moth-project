@@ -24,7 +24,7 @@ int main() {
         printf("Raw: %6d %6d %6d\t", raw[0], raw[1], raw[2]);
         printf("AccX: %5.2f g\t", acc[0]);
         printf("AccY: %5.2f g\t", acc[1]);
-        printf("AccZ: %5.2f g\t", acc[2]);
+        printf("AccZ: %5.2f g\n", acc[2]);
         /*
         printf("Raw: %6d %6d %6d\t", rot[0], rot[1], rot[2]);
         printf("AngX: %5.2f\t", ang[0]);
