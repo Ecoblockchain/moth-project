@@ -13,7 +13,7 @@
 int str_split(char**, char*, char*, int);
 int verify_nmea(char *);
 
-pthread_mutex_t i2c_1_lock;
+extern pthread_mutex_t i2c_1_lock;
 
 // log file
 void parse_rmc(char*);

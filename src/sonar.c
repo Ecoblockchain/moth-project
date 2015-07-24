@@ -10,14 +10,18 @@ mraa_i2c_context i2c_sonar;
 
 void pingSonar(int id) {
   mraa_i2c_address(i2c_sonar, sonar[id]);
-  mraa_i2c_write_byte(i2c_sonar, 0x51);
+  pthread_mutex_lock(&i2c_1_lock);
+    mraa_i2c_write_byte(i2c_sonar, 0x51);
+  pthread_mutex_unlock(&i2c_1_lock);
 }
 
 void updateSonar(int id) {
   uint8_t buf[2];
   int value;
   mraa_i2c_address(i2c_sonar, sonar[id]);
-  mraa_i2c_read(i2c_sonar, buf, 2);
+  pthread_mutex_lock(&i2c_1_lock);
+    mraa_i2c_read(i2c_sonar, buf, 2);
+  pthread_mutex_unlock(&i2c_1_lock);
   value =  (buf[0] << 8) | buf[1];
   parseSonar(arrayValues[id], value);
 }
