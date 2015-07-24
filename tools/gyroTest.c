@@ -6,16 +6,17 @@ int main() {
   mraa_i2c_context i2c;
   i2c = mraa_i2c_init(6);
 
-  mraa_i2c_frequency(i2c, MRAA_I2C_STD);
 
-  mraa_i2c_address(i2c, 0x68);
 
   uint8_t buf_out[2] = {0x3e, 0x80};
+  mraa_i2c_address(i2c, 0x68);
   mraa_i2c_write(i2c, buf_out, 2);
 
   while(1) {
+  mraa_i2c_address(i2c, 0x68);
   mraa_i2c_write_byte(i2c, 0x1b);
   uint8_t m_buffer[8];
+  mraa_i2c_address(i2c, 0x68);
   mraa_i2c_read(i2c, m_buffer, 8);
   int m_temperature;
   int m_rotation[3];
