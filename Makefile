@@ -2,6 +2,7 @@
 SDIR=src
 ODIR=$(SDIR)/obj
 CC=gcc
+CXX=g++
 CFLAGS=-Wall -pthread -lmraa
 FILE=moth
 
@@ -24,3 +25,6 @@ clean:
 
 clean-logs:
 	rm -rf ~/log/*
+
+imu-test: tools/imuTester.cpp
+	$(CXX) -Wall -lupm-adxl345 -lupm-itg3200 -lupm-hmc58831 -o $@ $^
