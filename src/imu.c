@@ -76,10 +76,11 @@ void acc_init(int bus) {
 }
 
 float* acc_getAcceleration() {
-    for (int i = 0; i < 3; i++) {
-        acc_accel[i] = acc_rawaccel[i] * acc_offsets[i];
-    }
-    return &acc_accel[0];
+  int i;
+  for (i = 0; i < 3; i++) {
+    acc_accel[i] = acc_rawaccel[i] * acc_offsets[i];
+  }
+  return &acc_accel[0];
 }
 
 int16_t* acc_getRawValues() {
