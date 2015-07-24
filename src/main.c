@@ -13,11 +13,11 @@
 #include "shared.h"
 
 #define MAX_THREADS 3
+#define IMU_I2C_BUS 1
 #define STATUS_LED 15
 #define TOGGLER 45
 
 pthread_t threads[MAX_THREADS];
-pthread_mutex_t i2c_1_lock = PTHREAD_MUTEX_INITIALIZER;
 mraa_gpio_context status;
 mraa_gpio_context toggler;
 int cont;
@@ -25,8 +25,8 @@ int cont;
 void startAll() {
 	pthread_create(&threads[0], NULL, logWriter, NULL);
 	pthread_create(&threads[1], NULL, gpsRead, NULL);
-	//pthread_create(&threads[2], NULL, sonarRead, NULL);
-	pthread_create(&threads[3], NULL, imuRead, NULL);
+	pthread_create(&threads[2], NULL, sonarRead, NULL);
+	//pthread_create(&threads[3], NULL, imuRead, NULL);
 	status = mraa_gpio_init(STATUS_LED);
 	mraa_gpio_dir(status, MRAA_GPIO_OUT_HIGH);
 }
@@ -53,6 +53,7 @@ void begin() {
 	int toggleOn;
 	toggler = mraa_gpio_init(TOGGLER);
 	mraa_gpio_dir(toggler, MRAA_GPIO_IN);
+	//imu_init(IMU_I2C_BUS);
 
 	signal(SIGINT, sig_handler);
 

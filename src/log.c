@@ -16,9 +16,9 @@
 #include "shared.h"
 #include "log.h"
 
-pthread_mutex_t lock_1 = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t lock_2 = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t* log_locks[] = {&lock_1, &lock_2};
+pthread_mutex_t log_lock_1 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t log_lock_2 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t* log_locks[] = {&log_lock_1, &log_lock_2};
 
 FILE* fp[2];
 char filenames[2][100];
@@ -47,6 +47,13 @@ void save_log_value(int index, double data, int log) {
 	pthread_mutex_lock(log_locks[log]);
 		log_arrays[log][index] = data;
 	pthread_mutex_unlock(log_locks[log]);
+}
+
+void parseSonar(int index, int value) {
+	if (index < 0 || index >= LOG_1_ARRAY_MAX) return;
+	pthread_mutex_lock(log_locks[0]);
+		log_arrays[0][index] = value;
+	pthread_mutex_unlock(log_locks[0]);
 }
 
 void open_files(char *time, char *date){
@@ -92,13 +99,6 @@ void write_log_row(int log) {
 		fprintf(fp[log],"\n");
 	pthread_mutex_unlock(log_locks[log]);
 	fclose(fp[log]);
-}
-
-void parseSonar(int index, int value) {
-	if (index < 0 || index >= LOG_1_ARRAY_MAX) return;
-	pthread_mutex_lock(log_locks[0]);
-		log_arrays[0][index] = value;
-	pthread_mutex_unlock(log_locks[0]);
 }
 
 /***************************************************
