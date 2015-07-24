@@ -1,6 +1,7 @@
 #include <mraa/i2c.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <unistd.h>
 
   int m_temperature;
   int m_rotation[3];
@@ -34,18 +35,20 @@ void calibrate() {
   int skip = 5; // initial samples to skip
   int temp[3] = {0};
 
-  for(int i = 0; i < reads; i++){
+  int i;
+  for(i = 0; i < reads; i++){
 
     update();
     if (i > skip){
-      for (int j = 0; j < 3; j++){
+      int j;
+      for (j = 0; j < 3; j++){
         temp[j] += m_rotation[j];
       }
     }
     usleep(delay);
   }
 
-  for(int i = 0; i < 3; i++){
+  for(i = 0; i < 3; i++){
     m_offsets[i] = (-1) * temp[i] / (reads - skip);
   }
 }
@@ -58,4 +61,6 @@ int main() {
 
   calibrate();
   update();
+
+  return 0;
 }
