@@ -8,6 +8,7 @@
   mraa_i2c_context i2c;
 
 void update() {
+  printf("RIGHT HEREUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU\n\n\n\n");
   mraa_i2c_address(i2c, 0x68);
   mraa_i2c_write_byte(i2c, 0x1b);
   uint8_t m_buffer[8];
@@ -31,6 +32,7 @@ void update() {
 }
 
 void calibrate() {
+  printf("RIGHT HERECCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC\n\n\n\n");
   int reads = 600;
   int delay = 4000; // 4 milliseconds
   int skip = 5; // initial samples to skip
@@ -52,16 +54,20 @@ void calibrate() {
   for(i = 0; i < 3; i++){
     m_offsets[i] = (-1) * temp[i] / (reads - skip);
   }
+  printf("RIGHT HEREcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\n\n\n\n");
 }
 
 int main() {
+  printf("RIGHT HERE1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\n\n\n\n");
   i2c = mraa_i2c_init(0);
   mraa_i2c_address(i2c, 0x68);
   uint8_t buf_out[2] = {0x3e, 0x80};
   mraa_i2c_write(i2c, buf_out, 2);
   int *rot;
+  printf("RIGHT HERE2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222\n\n\n\n");
 
   calibrate();
+  printf("RIGHT HERE######################################################################################################################\n\n\n\n");
   update();
 
   while(1){
