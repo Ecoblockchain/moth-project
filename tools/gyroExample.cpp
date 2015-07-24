@@ -8,7 +8,7 @@ int main() {
   int16_t *rot;
       float *ang;
       // Note: Sensor not supported on Intel Edison with Arduino breakout
-      upm::Itg3200* gyro = new upm::Itg3200(0);
+      upm::Itg3200* gyro = new upm::Itg3200(1);
       while(true){
           gyro->update(); // Update the data
           rot = gyro->getRawValues(); // Read raw sensor data

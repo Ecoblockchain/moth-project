@@ -8,7 +8,7 @@ int main() {
   int16_t *raw;
       float *acc;
       // Note: Sensor only works at 3.3V on the Intel Edison with Arduino breakout
-      upm::Adxl345* accel = new upm::Adxl345(0);
+      upm::Adxl345* accel = new upm::Adxl345(1);
       while(true){
           accel->update(); // Update the data
           raw = accel->getRawValues(); // Read raw sensor data
