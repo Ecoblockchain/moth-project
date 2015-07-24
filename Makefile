@@ -3,7 +3,8 @@ SDIR=src
 ODIR=$(SDIR)/obj
 CC=gcc
 CXX=g++
-CFLAGS=-Wall -pthread -lmraa
+RM=rm -rf
+FLAGS=-Wall -pthread -lmraa
 FILE=moth
 
 _OBJ=main.o gps.o stringpot.o log.o i2c.o
@@ -13,18 +14,18 @@ _HEADERS=shared.h log.h defines.h
 HEADERS=$(patsubst %,src/%,$(_HEADERS))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(HEADERS)
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(FLAGS) -c -o $@ $<
 
 $(FILE): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(FLAGS) -o $@ $^
 
 .PHONY: clean
 
 clean:
-	rm -f moth $(ODIR)/* $(SDIR)/*~
+	$(RM) $(FILE) $(ODIR)/* $(SDIR)/*~
 
 clean-logs:
-	rm -rf ~/log/*
+	$(RM) ~/log/*
 
 imu-test: tools/imuTester.cpp
-	$(CXX) -Wall -lupm-adxl345 -lupm-itg3200 -lupm-hmc58831 -o $@ $^
+	$(CXX) -Wall -lupm-adxl345 -lupm-itg3200 -lupm-hmc5883l -o $@ $^
