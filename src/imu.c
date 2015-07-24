@@ -252,12 +252,13 @@ float mag_get_declination() {
 
 void imu_init(int bus) {
   acc_init(bus);
-  gyro_init(bus);
+  //gyro_init(bus);
+  printf("gyro disabled\n");
   mag_init(bus);
 }
 
 void imu_update() {
   acc_update();
-  gyro_update();
+  //gyro_update();
   mag_update();
 }
