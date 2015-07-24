@@ -68,9 +68,12 @@ void begin() {
 }
 
 int main(int argc, char* argv[]) {
+	printf("starting\n");
 	int seconds;
 	if (argc > 1) {
+		printf("argc was > 1\n");
 		seconds = atoi(argv[1]);
+		printf("seconds = %i\n", seconds);
 		while (seconds > 0) {
 			printf("Starting logger in %i seconds. (Press any key to abort.)\r", seconds);
 			seconds--;
