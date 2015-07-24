@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include "log.h"
 #include "shared.h"
-#include "defines.h"
 
 uint8_t sonar[] = {0x02, 0x04, 0x00, 0x00};
 int arrayValues[] = {SONAR_1, SONAR_2, SONAR_3, SONAR_4};
