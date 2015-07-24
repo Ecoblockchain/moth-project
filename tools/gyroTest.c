@@ -1,5 +1,4 @@
 #include <mraa/i2c.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -13,7 +12,7 @@ void update() {
   mraa_i2c_write_byte(i2c, 0x1b);
   uint8_t m_buffer[8];
   mraa_i2c_address(i2c, 0x68);
-  mraa_i2c_read(i2c, m_buffer, 8);
+  read(((int*) i2c)[2], m_buffer, 8);
 
 
   //temp
@@ -54,13 +53,21 @@ void calibrate() {
 }
 
 int main() {
-  i2c = mraa_i2c_init(6);
+  i2c = mraa_i2c_init(0);
   mraa_i2c_address(i2c, 0x68);
   uint8_t buf_out[2] = {0x3e, 0x80};
   mraa_i2c_write(i2c, buf_out, 2);
+  int *rot;
 
   calibrate();
   update();
+
+  while(1){
+      update(); // Update the data
+      rot = m_rotation;  // Read rotational speed (deg/sec)
+      fprintf(stdout, "Raw: %6d %6d %6d\n", rot[0], rot[1], rot[2]);
+      sleep(1);
+  }
 
   return 0;
 }
