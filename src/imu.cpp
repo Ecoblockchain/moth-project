@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <iostream>
 #include <stdlib.h>
 #include <upm/adxl345.h>
 #include <upm/hmc5883l.h>
@@ -9,6 +10,7 @@ extern "C" {
 }
 
 void* imuRead() {
+    std::cout << "entering imuRead!" << std::endl;
     int16_t *raw;
     int16_t *pos;
     int16_t *rot;
