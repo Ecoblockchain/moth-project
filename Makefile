@@ -32,4 +32,13 @@ clean-logs:
 	$(RM) ~/log/*
 
 imu-test: tools/imuTester.cpp
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(LDLIBS) -o $@ $^
+
+acc-example: tools/accExample.cpp
+	$(CXX) $(CXXFLAGS) $(LDLIBS) -o $@ $^
+
+compass-example: tools/compassExample.cpp
+	$(CXX) $(CXXFLAGS) $(LDLIBS) -o $@ $^
+
+gyro-example: tools/gyroExample.cpp
+	$(CXX) $(CXXFLAGS) $(LDLIBS) -o $@ $^
