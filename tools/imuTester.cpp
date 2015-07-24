@@ -11,8 +11,8 @@ int main() {
     float *ang;
 
     //upm::Adxl345* accel = new upm::Adxl345(6);
-    //upm::Itg3200* gyro = new upm::Itg3200(6);
-    upm::Hmc5883l* compass = new upm::Hmc5883l(6);
+    upm::Itg3200* gyro = new upm::Itg3200(6);
+    //upm::Hmc5883l* compass = new upm::Hmc5883l(6);
 
     while(true){
         //accel->update(); // Update the data
@@ -21,7 +21,7 @@ int main() {
         //acc = accel->getAcceleration(); // Read acceleration (g)
         //rot = gyro->getRawValues();
         //ang = gyro->getRotation();
-        pos = compass->coordinates();
+        //pos = compass->coordinates();
 
         //printf("Current scale: 0x%2xg\t", accel->getScale());
         //printf("Raw: %6d %6d %6d\t", raw[0], raw[1], raw[2]);
@@ -29,14 +29,14 @@ int main() {
         //printf("AccY: %5.2f g\t", acc[1]);
         //printf("AccZ: %5.2f g\n", acc[2]);
 
-        //printf("Raw: %6d %6d %6d\t", rot[0], rot[1], rot[2]);
-        //printf("AngX: %5.2f\t", ang[0]);
-        //printf("AngY: %5.2f\t", ang[1]);
-        //printf("AngZ: %5.2f\t", ang[2]);
+        printf("Raw: %6d %6d %6d\t", rot[0], rot[1], rot[2]);
+        printf("AngX: %5.2f\t", ang[0]);
+        printf("AngY: %5.2f\t", ang[1]);
+        printf("AngZ: %5.2f\t", ang[2]);
         //printf("Temp: %5.2f Raw: %6d\t", gyro->getTemperature(), gyro->getRawTemp());
 
-        fprintf(stdout, "coor: %5d %5d %5d ", pos[0], pos[1], pos[2]);
-        fprintf(stdout, "heading: %5.2f direction: %3.2f\n\n", compass->heading(), compass->direction());
+        //printf("coor: %5d %5d %5d ", pos[0], pos[1], pos[2]);
+        //printf("heading: %5.2f direction: %3.2f\n\n", compass->heading(), compass->direction());
 
 
         usleep(100000);
