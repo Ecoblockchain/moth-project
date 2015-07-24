@@ -25,7 +25,7 @@ int cont;
 void startAll() {
 	pthread_create(&threads[0], NULL, logWriter, NULL);
 	pthread_create(&threads[1], NULL, gpsRead, NULL);
-	pthread_create(&threads[2], NULL, sonarRead, NULL);
+	pthread_create(&threads[2], NULL, i2cRead, NULL);
 	//pthread_create(&threads[3], NULL, imuRead, NULL);
 	status = mraa_gpio_init(STATUS_LED);
 	mraa_gpio_dir(status, MRAA_GPIO_OUT_HIGH);
