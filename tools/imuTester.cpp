@@ -9,29 +9,29 @@ int main() {
     float *acc;
     float *ang;
 
-    upm::Adxl345* accel = new upm::Adxl345(6);
+    //upm::Adxl345* accel = new upm::Adxl345(6);
     upm::Itg3200* gyro = new upm::Itg3200(6);
 
     while(true){
-        accel->update(); // Update the data
-        //gyro->update(); // Update the data
-        raw = accel->getRawValues(); // Read raw sensor data
-        acc = accel->getAcceleration(); // Read acceleration (g)
-        //rot = gyro->getRawValues();
-        //ang = gyro->getRotation();
+        //accel->update(); // Update the data
+        gyro->update(); // Update the data
+        //raw = accel->getRawValues(); // Read raw sensor data
+        //acc = accel->getAcceleration(); // Read acceleration (g)
+        rot = gyro->getRawValues();
+        ang = gyro->getRotation();
 
-        printf("Current scale: 0x%2xg\t", accel->getScale());
-        printf("Raw: %6d %6d %6d\t", raw[0], raw[1], raw[2]);
-        printf("AccX: %5.2f g\t", acc[0]);
-        printf("AccY: %5.2f g\t", acc[1]);
-        printf("AccZ: %5.2f g\n", acc[2]);
-        /*
+        //printf("Current scale: 0x%2xg\t", accel->getScale());
+        //printf("Raw: %6d %6d %6d\t", raw[0], raw[1], raw[2]);
+        //printf("AccX: %5.2f g\t", acc[0]);
+        //printf("AccY: %5.2f g\t", acc[1]);
+        //printf("AccZ: %5.2f g\n", acc[2]);
+
         printf("Raw: %6d %6d %6d\t", rot[0], rot[1], rot[2]);
         printf("AngX: %5.2f\t", ang[0]);
         printf("AngY: %5.2f\t", ang[1]);
         printf("AngZ: %5.2f\t", ang[2]);
         printf("Temp: %5.2f Raw: %6d\t", gyro->getTemperature(), gyro->getRawTemp());
-        */
+      
 
         usleep(100000);
     }
