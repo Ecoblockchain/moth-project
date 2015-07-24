@@ -14,7 +14,7 @@ int main() {
         raw = accel->getRawValues(); // Read raw sensor data
         acc = accel->getAcceleration(); // Read acceleration (g)
 
-        fprintf(stdout, "Current scale: 0x%2xg\n", accel->getScale());
+        printf("Current scale: 0x%2xg\n", accel->getScale());
         fprintf(stdout, "Raw: %6d %6d %6d\n", raw[0], raw[1], raw[2]);
         fprintf(stdout, "AccX: %5.2f g\n", acc[0]);
         fprintf(stdout, "AccY: %5.2f g\n", acc[1]);
