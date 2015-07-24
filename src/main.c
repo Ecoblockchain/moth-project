@@ -68,6 +68,7 @@ void begin() {
 }
 
 void* keyPressCheck() {
+	printf("STARTING KEY CHECKER\n");
 	while (getchar() == EOF);
 	exit(0);
 }
