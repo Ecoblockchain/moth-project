@@ -19,7 +19,7 @@ void* imuRead() {
 
     upm::Adxl345* accel = new upm::Adxl345(0);
     //upm::Itg3200* gyro = new upm::Itg3200(0);
-    upm::Hmc5883l* compass = new upm::Hmc5883l(0);
+    //upm::Hmc5883l* compass = new upm::Hmc5883l(0);
 
     while (true) {
         accel->update(); // Update the data
@@ -45,7 +45,7 @@ void* imuRead() {
         save_log_value(TEMP, gyro->getTemperature(), 1);
         save_log_value(RAW_TEMP, gyro->getRawTemp(), 1);
         */
-
+        /*
         compass->update();
         pos = compass->coordinates();
         save_log_value(COMPASS_X, pos[0], 1);
@@ -53,5 +53,7 @@ void* imuRead() {
         save_log_value(COMPASS_Z, pos[2], 1);
         save_log_value(HEADING, compass->heading(), 1);
         save_log_value(DIRECTION, compass->direction(), 1);
+        */
+        usleep(10000);
     }
 }
