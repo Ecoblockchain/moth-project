@@ -53,7 +53,7 @@ void begin() {
 	int toggleOn;
 	toggler = mraa_gpio_init(TOGGLER);
 	mraa_gpio_dir(toggler, MRAA_GPIO_IN);
-	//imu_init(IMU_I2C_BUS);
+	imu_init(IMU_I2C_BUS);
 
 	signal(SIGINT, sig_handler);
 
