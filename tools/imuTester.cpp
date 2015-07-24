@@ -10,11 +10,11 @@ int main() {
     float *ang;
 
     upm::Adxl345* accel = new upm::Adxl345(1);
-    upm::Itg3200* gyro = new upm::Itg3200(1);
+    //upm::Itg3200* gyro = new upm::Itg3200(1);
 
     while(true){
         accel->update(); // Update the data
-        gyro->update(); // Update the data
+        //gyro->update(); // Update the data
         raw = accel->getRawValues(); // Read raw sensor data
         acc = accel->getAcceleration(); // Read acceleration (g)
         //rot = gyro->getRawValues();
