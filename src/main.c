@@ -11,7 +11,6 @@
 #include <signal.h>
 #include <mraa/gpio.h>
 #include "shared.h"
-#include "defines.h"
 
 #define MAX_THREADS 4
 #define STATUS_LED 15
