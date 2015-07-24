@@ -9,7 +9,7 @@ int main() {
     float *acc;
     float *ang;
 
-    upm::Adxl345* accel = new upm::Adxl345(1);
+    upm::Adxl345* accel = new upm::Adxl345(6);
     //upm::Itg3200* gyro = new upm::Itg3200(1);
 
     while(true){
