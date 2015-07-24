@@ -5,7 +5,6 @@ CC=gcc
 CXX=g++
 RM=rm -rf
 CFLAGS=-Wall
-CXXFLAGS=-Wall
 LDLIBS=-pthread -lmraa -lupm-adxl345 -lupm-itg3200 -lupm-hmc5883l
 FILE=moth
 
@@ -19,10 +18,10 @@ $(ODIR)/%.o: $(SDIR)/%.c $(HEADERS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(HEADERS)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CFLAGS) -c -o $@ $<
 
 $(FILE): $(OBJ)
-	$(CXX) $(CFLAGS) -o $@ $^
+	$(CXX) $(LDLIBS) -o $@ $^
 
 .PHONY: clean
 
