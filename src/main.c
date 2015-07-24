@@ -5,6 +5,7 @@
  */
 
 #include <pthread.h>
+#include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
 #include <signal.h>
@@ -14,6 +15,7 @@
 
 pthread_t threads[MAX_THREADS];
 mraa_gpio_context status;
+mraa_gpio_context toggler;
 int cont;
 
 void startAll() {
@@ -34,16 +36,15 @@ void cancelAll() {
 
 void sig_handler(int signo) {
     if (signo == SIGINT) {
-        printf("closing IO%d nicely\n", STATUS_LED);
+				mraa_gpio_close(toggler);
         cont = 0;
     }
 }
 
-int main() {
+void begin() {
 	int running = 0;
 	cont = 1;
 	int toggleOn;
-	mraa_gpio_context toggler;
 	toggler = mraa_gpio_init(TOGGLER);
 	mraa_gpio_dir(toggler, MRAA_GPIO_IN);
 
@@ -64,7 +65,17 @@ int main() {
 		}
 		usleep(50000);
 	}
+}
 
-	mraa_gpio_close(toggler);
+int main(int argc, char* argv[]) {
+	int seconds;
+	if (argc > 1) {
+		seconds = atoi(argv[1]);
+		while (seconds > 0) {
+			printf("Starting logger in %i seconds. (Press any key to abort.)", seconds);
+			sleep(1);
+		}
+	}
+	begin();
 	return 0;
 }

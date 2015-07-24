@@ -1,5 +1,6 @@
 # Makefile for Red Bull Moth Project 2015
-ODIR=src/obj
+SDIR=src
+ODIR=$(SDIR)/obj
 CC=gcc
 CFLAGS=-Wall -pthread -lmraa
 FILE=moth
@@ -10,7 +11,7 @@ OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 _HEADERS=shared.h log.h defines.h
 HEADERS=$(patsubst %,src/%,$(_HEADERS))
 
-$(ODIR)/%.o: src/%.c $(HEADERS)
+$(ODIR)/%.o: $(SDIR)/%.c $(HEADERS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(FILE): $(OBJ)

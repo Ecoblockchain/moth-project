@@ -8,7 +8,6 @@
 uint8_t sonar[] = {0x02, 0x04, 0x00, 0x00};
 int arrayValues[] = {SONAR_1, SONAR_2, SONAR_3, SONAR_4};
 mraa_i2c_context i2c;
-pthread_t threads[MAX_THREADS];
 
 void pingSonar(int id) {
   mraa_i2c_address(i2c, sonar[id]);
@@ -24,26 +23,27 @@ void updateSonar(int id) {
   parseSonar(arrayValues[id], value);
 }
 
-void* startSonar(void* id) {
-  int myID = *((int*) id);
-  while (1) {
-    pingSonar(myID);
-    usleep(80000);
-    updateSonar(myID);
-    usleep(80000);
-  }
-}
-
 void* sonarRead() {
 	i2c = mraa_i2c_init(1);
   mraa_i2c_frequency(i2c, MRAA_I2C_STD);
 
-  int* ids[MAX_SONARS];
-  int i;
-  for (i = 0; i < MAX_SONARS; i++) {
-    ids[i] = (int*) malloc(sizeof(int));
-    *ids[i] = i;
-    pthread_create(&threads[MAX_THREADS - 4 + i], NULL, startSonar, (void*) ids[i]);
+  pingSonar(0);
+  usleep(40000);
+  pingSonar(1);
+  usleep(40000);
+  while (1) {
+    updateSonar(0);
+    pingSonar(2);
+    usleep(40000);
+    updateSonar(1);
+    pingSonar(3);
+    usleep(40000);
+    updateSonar(2);
+    pingSonar(0);
+    usleep(40000);
+    updateSonar(3);
+    pingSonar(1);
+    usleep(40000);
   }
 
   return NULL;
