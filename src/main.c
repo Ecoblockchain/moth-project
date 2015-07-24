@@ -12,7 +12,7 @@
 #include <mraa/gpio.h>
 #include "shared.h"
 
-#define MAX_THREADS 4
+#define MAX_THREADS 3
 #define STATUS_LED 15
 #define TOGGLER 45
 
@@ -23,10 +23,10 @@ mraa_gpio_context toggler;
 int cont;
 
 void startAll() {
-	pthread_create(&threads[0], NULL, sonarRead, NULL);
+	pthread_create(&threads[0], NULL, logWriter, NULL);
 	pthread_create(&threads[1], NULL, gpsRead, NULL);
-	pthread_create(&threads[2], NULL, imuRead, NULL);
-	pthread_create(&threads[3], NULL, logWriter, NULL);
+	pthread_create(&threads[2], NULL, sonarRead, NULL);
+	//pthread_create(&threads[3], NULL, imuRead, NULL);
 	status = mraa_gpio_init(STATUS_LED);
 	mraa_gpio_dir(status, MRAA_GPIO_OUT_HIGH);
 }
