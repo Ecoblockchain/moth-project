@@ -12,10 +12,10 @@ extern "C" {
 void* imuRead() {
     std::cout << "entering imuRead!" << std::endl;
     int16_t *raw;
-    int16_t *pos;
-    int16_t *rot;
+    //int16_t *pos;
+    //int16_t *rot;
     float *acc;
-    float *ang;
+    //float *ang;
     int i;
     for (i = 0; i < LOG_2_ARRAY_MAX; i++) {
       save_log_value(i, 0, 1);
