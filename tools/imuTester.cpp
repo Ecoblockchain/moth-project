@@ -33,7 +33,7 @@ int main() {
         printf("AngX: %5.2f\t", ang[0]);
         printf("AngY: %5.2f\t", ang[1]);
         printf("AngZ: %5.2f\n", ang[2]);
-        //printf("Temp: %5.2f Raw: %6d\t", gyro->getTemperature(), gyro->getRawTemp());
+        printf("Temp: %5.2f Raw: %6d\t", gyro->getTemperature(), gyro->getRawTemp());
 
         //printf("coor: %5d %5d %5d ", pos[0], pos[1], pos[2]);
         //printf("heading: %5.2f direction: %3.2f\n\n", compass->heading(), compass->direction());
