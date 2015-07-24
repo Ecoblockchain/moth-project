@@ -1,5 +1,6 @@
 allen-edwards
 moth
+imu-test
 *.log
 src/obj/*
 tests
