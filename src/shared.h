@@ -18,7 +18,7 @@ void parseSonar(int index, int value);
 // main
 void* gpsRead();
 void* spRead();
-void* sonarRead();
+void* i2cRead();
 void* imuRead();
 void* logWriter();
 
