@@ -12,7 +12,7 @@ int main() {
 
     //upm::Adxl345* accel = new upm::Adxl345(6);
     //upm::Itg3200* gyro = new upm::Itg3200(6);
-    upm::Hmc5883l* compass = new upm::Hmc5883l(1);
+    upm::Hmc5883l* compass = new upm::Hmc5883l(6);
 
     while(true){
         //accel->update(); // Update the data
