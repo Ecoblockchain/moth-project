@@ -17,8 +17,8 @@ int main() {
         gyro->update(); // Update the data
         raw = accel->getRawValues(); // Read raw sensor data
         acc = accel->getAcceleration(); // Read acceleration (g)
-        rot = gyro->getRawValues();
-        ang = gyro->getRotation();
+        //rot = gyro->getRawValues();
+        //ang = gyro->getRotation();
 
         printf("Current scale: 0x%2xg\t", accel->getScale());
         printf("Raw: %6d %6d %6d\t", raw[0], raw[1], raw[2]);
