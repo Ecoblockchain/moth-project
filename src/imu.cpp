@@ -16,21 +16,29 @@ void* imuRead() {
     int16_t *rot;
     float *acc;
     float *ang;
+    int i;
+    for (i = 0; i < LOG_2_ARRAY_MAX; i++) {
+      save_log_value(i, 0, 1);
+    }
 
-    upm::Adxl345* accel = new upm::Adxl345(0);
-    //upm::Itg3200* gyro = new upm::Itg3200(0);
-    //upm::Hmc5883l* compass = new upm::Hmc5883l(0);
+    pthread_mutex_lock(&i2c_1_lock);
+      upm::Adxl345* accel = new upm::Adxl345(1);
+      //upm::Itg3200* gyro = new upm::Itg3200(0);
+      //upm::Hmc5883l* compass = new upm::Hmc5883l(0);
+    pthread_mutex_unlock(&i2c_1_lock);
 
     while (true) {
+      pthread_mutex_lock(&i2c_1_lock);
         accel->update(); // Update the data
-        raw = accel->getRawValues(); // Read raw sensor data
-        acc = accel->getAcceleration(); // Read acceleration (g)
-        save_log_value(ACC_X, acc[0], 1);
-        save_log_value(ACC_Y, acc[1], 1);
-        save_log_value(ACC_Z, acc[2], 1);
-        save_log_value(RAW_ACC_X, raw[0], 1);
-        save_log_value(RAW_ACC_Y, raw[1], 1);
-        save_log_value(RAW_ACC_Z, raw[2], 1);
+      pthread_mutex_unlock(&i2c_1_lock);
+      raw = accel->getRawValues(); // Read raw sensor data
+      acc = accel->getAcceleration(); // Read acceleration (g)
+      save_log_value(ACC_X, acc[0], 1);
+      save_log_value(ACC_Y, acc[1], 1);
+      save_log_value(ACC_Z, acc[2], 1);
+      save_log_value(RAW_ACC_X, raw[0], 1);
+      save_log_value(RAW_ACC_Y, raw[1], 1);
+      save_log_value(RAW_ACC_Z, raw[2], 1);
 
         /*
         gyro->update();

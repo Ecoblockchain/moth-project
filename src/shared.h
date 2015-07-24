@@ -8,8 +8,11 @@
 #ifndef PROTOTYPES_H_
 #define PROTOTYPES_H_
 
+#include <pthread.h>
+
 int str_split(char**, char*, char*, int);
 int verify_nmea(char *);
+
 
 // log file
 void parse_rmc(char*);

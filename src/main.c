@@ -17,6 +17,7 @@
 #define TOGGLER 45
 
 pthread_t threads[MAX_THREADS];
+pthread_mutex_t i2c_1_lock = PTHREAD_MUTEX_INITIALIZER;
 mraa_gpio_context status;
 mraa_gpio_context toggler;
 int cont;
