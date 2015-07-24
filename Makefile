@@ -4,8 +4,9 @@ ODIR=$(SDIR)/obj
 CC=gcc
 CXX=g++
 RM=rm -rf
-CFLAGS=-Wall -pthread -lmraa
-CXXFLAGS=-Wall -lupm-adxl345 -lupm-itg3200 -lupm-hmc5883l
+CFLAGS=-Wall
+CXXFLAGS=-Wall
+LDLIBS=-pthread -lmraa -lupm-adxl345 -lupm-itg3200 -lupm-hmc5883l
 FILE=moth
 
 _OBJ=main.o gps.o log.o sonar.o imu.o
