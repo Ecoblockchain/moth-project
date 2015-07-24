@@ -25,11 +25,13 @@ int main() {
         printf("AccX: %5.2f g\t", acc[0]);
         printf("AccY: %5.2f g\t", acc[1]);
         printf("AccZ: %5.2f g\t", acc[2]);
+        /*
         printf("Raw: %6d %6d %6d\t", rot[0], rot[1], rot[2]);
         printf("AngX: %5.2f\t", ang[0]);
         printf("AngY: %5.2f\t", ang[1]);
         printf("AngZ: %5.2f\t", ang[2]);
         printf("Temp: %5.2f Raw: %6d\t", gyro->getTemperature(), gyro->getRawTemp());
+        */
 
         usleep(100000);
     }
