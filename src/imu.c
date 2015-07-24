@@ -2,6 +2,7 @@
 #include <math.h>
 #include <mraa/i2c.h>
 #include "shared.h"
+#include "log.h"
 
 //address and id
 #define ADXL345_I2C_ADDR 0x53
@@ -190,6 +191,16 @@ mraa_result_t gyro_update() {
     // z
     gyro_rotation[2] = ((gyro_buffer[6] << 8 ) | gyro_buffer[7]) + gyro_offsets[2];
 
+    save_log_value(RAW_TEMP, gyro_temperature, 1);
+    save_log_value(TEMP, gyro_getTemperature(), 1);
+    save_log_value(RAW_ANG_X, gyro_rotation[0], 1);
+    save_log_value(RAW_ANG_Y, gyro_rotation[1], 1);
+    save_log_value(RAW_ANG_Z, gyro_rotation[2], 1);
+    float* ang = gyro_getRotation();
+    save_log_value(ANG_X, ang[0], 1);
+    save_log_value(ANG_Y, ang[1], 1);
+    save_log_value(ANG_Z, ang[2], 1);
+
     return MRAA_SUCCESS;
 }
 
@@ -209,6 +220,18 @@ void mag_init(int bus) {
     mag_update();
 }
 
+float mag_direction() {
+    return atan2(mag_coor[1] * SCALE_0_92_MG, mag_coor[0] * SCALE_0_92_MG) + mag_declination;
+}
+
+float mag_heading() {
+    float dir = mag_direction() * 180/M_PI;
+    if(dir < 0){
+        dir += 360.0;
+    }
+    return dir;
+}
+
 mraa_result_t mag_update() {
     mraa_i2c_address(mag_context, HMC5883L_I2C_ADDR);
     mraa_i2c_write_byte(mag_context, HMC5883L_DATA_REG);
@@ -223,19 +246,13 @@ mraa_result_t mag_update() {
     // y
     mag_coor[1] = (mag_rx_tx_buf[HMC5883L_Y_MSB_REG] << 8 ) | mag_rx_tx_buf[HMC5883L_Y_LSB_REG];
 
+    save_log_value(COMPASS_X, mag_coor[0], 1);
+    save_log_value(COMPASS_Y, mag_coor[1], 1);
+    save_log_value(COMPASS_Z, mag_coor[2], 1);
+    save_log_value(HEADING, mag_heading(), 1);
+    save_log_value(DIRECTION, mag_direction(), 1);
+
     return MRAA_SUCCESS;
-}
-
-float mag_direction() {
-    return atan2(mag_coor[1] * SCALE_0_92_MG, mag_coor[0] * SCALE_0_92_MG) + mag_declination;
-}
-
-float mag_heading() {
-    float dir = mag_direction() * 180/M_PI;
-    if(dir < 0){
-        dir += 360.0;
-    }
-    return dir;
 }
 
 int16_t* mag_coordinates() {
