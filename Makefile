@@ -20,4 +20,7 @@ $(FILE): $(OBJ)
 .PHONY: clean
 
 clean:
-	rm -f moth $(ODIR)/*.o $(SDIR)/*~
+	rm -f moth $(ODIR)/* $(SDIR)/*~
+
+clean-logs:
+	rm -rf ~/log/*
