@@ -22,7 +22,7 @@ pthread_mutex_t* log_locks[] = {&log_lock_1, &log_lock_2};
 
 FILE* fp[2];
 char filenames[2][100];
-double log_arrays[2][LOG_1_ARRAY_MAX];
+double log_arrays[2][LOG_2_ARRAY_MAX];
 int files_open = 0;
 int log_array_max[] = {LOG_1_ARRAY_MAX, LOG_2_ARRAY_MAX};
 char mark[20] = "";
