@@ -67,18 +67,23 @@ void begin() {
 	}
 }
 
+void* keyPressCheck() {
+	while (getchar() == EOF);
+	exit(0);
+}
+
 int main(int argc, char* argv[]) {
-	printf("starting\n");
 	int seconds;
+	pthread_t keyChecker;
 	if (argc > 1) {
-		printf("argc was > 1\n");
 		seconds = atoi(argv[1]);
-		printf("seconds = %i\n", seconds);
+		pthread_create(&keyChecker, NULL, keyPressCheck, NULL);
 		while (seconds > 0) {
 			printf("Starting logger in %i seconds. (Press any key to abort.)\n", seconds);
 			seconds--;
 			sleep(1);
 		}
+		pthread_cancel(keyChecker);
 	}
 	begin();
 	return 0;
