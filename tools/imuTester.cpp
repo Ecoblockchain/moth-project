@@ -16,7 +16,7 @@ int main() {
 
     while(true){
         //accel->update(); // Update the data
-        //gyro->update(); // Update the data
+        gyro->update(); // Update the data
         //raw = accel->getRawValues(); // Read raw sensor data
         //acc = accel->getAcceleration(); // Read acceleration (g)
         rot = gyro->getRawValues();
