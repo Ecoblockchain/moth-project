@@ -19,7 +19,7 @@ int main() {
         //gyro->update(); // Update the data
         //raw = accel->getRawValues(); // Read raw sensor data
         //acc = accel->getAcceleration(); // Read acceleration (g)
-        //rot = gyro->getRawValues();
+        rot = gyro->getRawValues();
         //ang = gyro->getRotation();
         //pos = compass->coordinates();
 
@@ -32,7 +32,7 @@ int main() {
         printf("Raw: %6d %6d %6d\t", rot[0], rot[1], rot[2]);
         printf("AngX: %5.2f\t", ang[0]);
         printf("AngY: %5.2f\t", ang[1]);
-        printf("AngZ: %5.2f\t", ang[2]);
+        printf("AngZ: %5.2f\n", ang[2]);
         //printf("Temp: %5.2f Raw: %6d\t", gyro->getTemperature(), gyro->getRawTemp());
 
         //printf("coor: %5d %5d %5d ", pos[0], pos[1], pos[2]);
