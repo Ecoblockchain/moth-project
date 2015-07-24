@@ -5,14 +5,15 @@
  *     Authors: Allen Edwards, James Vaughan
  */
 
-#include "shared.h"
 #include <pthread.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <ctype.h>
+#include "shared.h"
 #include "log.h"
 
 pthread_mutex_t lock_1 = PTHREAD_MUTEX_INITIALIZER;
@@ -82,14 +83,13 @@ void write_log_row(int log) {
 	fprintf(fp[log],"%d\t",j++);
 	pthread_mutex_lock(log_locks[log]);
 		for (i = 0 ; i < log_array_max[log] ; i++){
-      if (i == LATITUDE || i == LONGITUDE) {
+      if (log == 0 && (i == LATITUDE || i == LONGITUDE)) {
 			  fprintf(fp[log],"%0.6f\t",log_arrays[log][i]);
       } else {
 			  fprintf(fp[log],"%0.2f\t",log_arrays[log][i]);
       }
 		}
 		fprintf(fp[log],"\n");
-    //printf("%f\t%f\n", log_1_array[SONAR_1], log_1_array[SONAR_2]);
 	pthread_mutex_unlock(log_locks[log]);
 	fclose(fp[log]);
 }
@@ -134,9 +134,6 @@ void parse_rmc(char *buffer){
 		log_arrays[0][SOG] = atof(array[7]);
 	pthread_mutex_unlock(log_locks[0]);
 	if (files_open == 0) open_files(array[1],array[9]);
-	if (files_open == 1) {
-		write_log_row(0);
-	}
 }
 
 int str_split(char **array, char *buf, char *sep, int max){
@@ -152,4 +149,16 @@ int str_split(char **array, char *buf, char *sep, int max){
         array[i] = NULL;  // set to null
         size = i;
     return size;
+}
+
+void* logWriter() {
+  int i;
+  while (files_open == 0);
+  while (1) {
+    write_log_row(0);
+    for (i = 0; i < 10; i++) {
+      write_log_row(1);
+      usleep(10000);
+    }
+  }
 }

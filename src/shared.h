@@ -19,8 +19,11 @@ void log_error(char *message);
 void parseSonar(int index, int value);
 
 // main
-void * gpsRead();
-void * spRead();
-void * sonarRead();
+void* gpsRead();
+void* spRead();
+void* sonarRead();
+void* imuRead();
+void* logWriter();
+
 
 #endif /* PROTOTYPES_H_ */

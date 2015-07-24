@@ -46,9 +46,6 @@
 #define RAW_ANG_Y 23
 #define RAW_ANG_Z 24
 #define RAW_TEMP 25
-#define RAW_COMPASS_X 26
-#define RAW_COMPASS_Y 27
-#define RAW_COMPASS_Z 28
-#define	LOG_2_ARRAY_MAX	29
+#define	LOG_2_ARRAY_MAX	26
 
 #endif /* LOG_H_ */
