@@ -10,7 +10,7 @@ int main() {
     float *ang;
 
     upm::Adxl345* accel = new upm::Adxl345(6);
-    //upm::Itg3200* gyro = new upm::Itg3200(1);
+    upm::Itg3200* gyro = new upm::Itg3200(6);
 
     while(true){
         accel->update(); // Update the data
