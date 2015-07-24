@@ -255,3 +255,9 @@ void imu_init(int bus) {
   gyro_init(bus);
   mag_init(bus);
 }
+
+void imu_update() {
+  acc_update();
+  gyro_update();
+  mag_update();
+}

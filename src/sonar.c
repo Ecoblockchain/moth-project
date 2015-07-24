@@ -4,7 +4,7 @@
 #include "log.h"
 #include "shared.h"
 
-uint8_t sonar[] = {0x02, 0x04, 0x00, 0x00};
+uint8_t sonar[] = {0x04, 0x06, 0x08, 0x0a};
 int arrayValues[] = {SONAR_1, SONAR_2, SONAR_3, SONAR_4};
 mraa_i2c_context i2c_sonar;
 

@@ -1,25 +1,23 @@
 #include "shared.h"
 
+void imuRead() {
+  int i;
+  for (i = 0; i < 4; i++) {
+    imu_update();
+    usleep(10000);
+  }
+}
+
 void* i2cRead() {
+  uint8_t sonar_id = 0;
+  uint8_t mask = 0x03;
   initSonar();
 
-  pingSonar(0);
-  usleep(40000);
-  pingSonar(1);
-  usleep(40000);
   while (1) {
-    updateSonar(0);
-    pingSonar(2);
-    usleep(40000);
-    updateSonar(1);
-    pingSonar(3);
-    usleep(40000);
-    updateSonar(2);
-    pingSonar(0);
-    usleep(40000);
-    updateSonar(3);
-    pingSonar(1);
-    usleep(40000);
+    updateSonar(sonar_id);
+    pingSonar(sonar_id + 2);
+    imuRead();
+    sonar_id = (sonar_id + 1) & mask;
   }
 
   return NULL;

@@ -19,7 +19,6 @@ void parseSonar(int index, int value);
 void* gpsRead();
 void* spRead();
 void* i2cRead();
-void* imuRead();
 void* logWriter();
 
 // i2c
@@ -35,6 +34,7 @@ void pingSonar(int bus);
 void updateSonar(int bus);
 
 void imu_init(int bus);
+void imu_update();
 mraa_result_t acc_update();
 mraa_result_t gyro_update();
 void gyro_calibrate();
