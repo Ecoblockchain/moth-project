@@ -73,6 +73,7 @@ int main(int argc, char* argv[]) {
 		seconds = atoi(argv[1]);
 		while (seconds > 0) {
 			printf("Starting logger in %i seconds. (Press any key to abort.)", seconds);
+			seconds--;
 			sleep(1);
 		}
 	}
