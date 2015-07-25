@@ -1,62 +1,25 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <termios.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <mraa/i2c.h>
+#include "shared.h"
+#include "log.h"
 
 #define MAX_FIELDS 12
 
-volatile int arduino;
-int values[MAX_FIELDS];
+mraa_i2c_context arduino_context;
+uint8_t arduino_buffer[8];
 
-void initArduino() {
-  arduino = open("/dev/ttyMFD1", O_RDWR);
-  struct termios tio;
-  tcgetattr(arduino, &tio);
-  cfsetspeed(&tio, B9600);
-  cfmakeraw(&tio);
-  tcsetattr(arduino, TCSANOW, &tio);
+int convert(uint8_t high, uint8_t low) {
+  return (high << 8) | low;
 }
 
-int readLine() {
-  char c;
-  int i = 0;
-  char buffer[500];
-  char *line;
-  char *stop;
-  int readMore = 0;
-
-  while (1) {
-    while (read(arduino, &c, 1) == -1 || (c != '$' && readMore != 1));
-    if (c != '\n') {
-      buffer[i] = c;
-    } else {
-      line = &buffer[1];
-      for (i = 0; i < MAX_FIELDS; i++) {
-        values[i] = strtol(line, &stop, 10);
-        line = &stop[1];
-      }
-    return 0;
-    }
-  }
-
-  return 0;
+void arduino_init() {
+    arduino_context = mraa_i2c_init(1);
+    mraa_i2c_address(arduino_context, 0x33);
 }
 
-int printAll() {
-  int i;
-  for (i = 0; i < MAX_FIELDS; i++) {
-    printf("%i\t", values[i]);
-  }
-  return 0;
-}
-
-int main() {
-  initArduino();
-
-  while (1) {
-    readLine();
-    printAll();
-    usleep(10000);
-  }
+void analog_update() {
+  mraa_i2c_read(arduino_context, arduino_buffer, 8);
+  save_log_value(ANALOG_0, convert(arduino_buffer[0], arduino_buffer[1]), 1);
+  save_log_value(ANALOG_1, convert(arduino_buffer[2], arduino_buffer[3]), 1);
+  save_log_value(ANALOG_2, convert(arduino_buffer[4], arduino_buffer[5]), 1);
+  save_log_value(ANALOG_3, convert(arduino_buffer[6], arduino_buffer[7]), 1);
 }
