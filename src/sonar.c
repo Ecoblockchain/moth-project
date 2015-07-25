@@ -9,10 +9,12 @@ int arrayValues[] = {SONAR_1, SONAR_2, SONAR_3, SONAR_4};
 mraa_i2c_context i2c_sonar;
 
 void initSonar() {
+  printf("WARNING: ignoring sonars 3 and 4\n");
   i2c_sonar = mraa_i2c_init(1);
 }
 
 mraa_result_t pingSonar(int id) {
+  if (id > 1) return MRAA_SUCCESS; // TEMPORARY
   mraa_i2c_address(i2c_sonar, sonar[id]);
   mraa_result_t result;
   result = mraa_i2c_write_byte(i2c_sonar, 0x51);
@@ -23,6 +25,7 @@ mraa_result_t pingSonar(int id) {
 }
 
 mraa_result_t updateSonar(int id) {
+  if (id > 1) return MRAA_SUCCESS; // TEMPORARY
   mraa_i2c_address(i2c_sonar, sonar[id]);
   uint8_t buf[2];
   int value;
