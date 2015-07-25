@@ -24,6 +24,10 @@ void analog_update() {
   int i, val;
   for (i = 0; i < 4; i++) {
     val = (arduino_buffer[i * 2] << 8) | arduino_buffer[(i * 2) + 1];
-    if (val < 10000) save_log_value(ANALOG_0 + i, val, 1);
+    if (val < 2000) {
+      save_log_value(ANALOG_0 + i, val, 1);
+    } else {
+      printError("high analog value discarded");
+    }
   }
 }
