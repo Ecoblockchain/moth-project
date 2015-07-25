@@ -4,7 +4,7 @@ ODIR=$(SDIR)/obj
 CC=gcc
 RM=rm -rf
 CFLAGS=-Wall
-LDLIBS=-pthread -lmraa -lm
+LDLIBS=-pthread -lmraa -lm -ltime
 FILE=moth
 
 _OBJ=main.o gps.o log.o sonar.o imu.o i2c.o arduino.o
