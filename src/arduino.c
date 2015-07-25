@@ -17,7 +17,6 @@ void arduino_init() {
 }
 
 void analog_update() {
-  printf("analog_update\n");
   mraa_i2c_read(arduino_context, arduino_buffer, 8);
   save_log_value(ANALOG_0, bytesToInt(arduino_buffer[0], arduino_buffer[1]), 1);
   save_log_value(ANALOG_1, bytesToInt(arduino_buffer[2], arduino_buffer[3]), 1);
