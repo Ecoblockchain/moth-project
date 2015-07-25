@@ -25,7 +25,7 @@ clean:
 	$(RM) $(FILE) $(ODIR)/* $(SDIR)/*~
 
 clean-logs:
-	$(RM) /home/root/log/* /home/root/dumps/*
+	$(RM) /home/root/log/*
 
 install:
 	cp $(FILE) /bin/moth
