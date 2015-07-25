@@ -18,7 +18,7 @@ void* i2cRead() {
 
   while (1) {
     updateSonar(sonar_id);
-    pingSonar(sonar_id + 2);
+    pingSonar((sonar_id + 2) & mask);
     imuRead();
     sonar_id = (sonar_id + 1) & mask;
   }
