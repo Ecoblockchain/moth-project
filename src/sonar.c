@@ -10,10 +10,10 @@ mraa_i2c_context i2c_sonar;
 
 void initSonar() {
   i2c_sonar = mraa_i2c_init(1);
-  mraa_i2c_address(i2c_sonar, sonar[id]);
 }
 
 mraa_result_t pingSonar(int id) {
+  mraa_i2c_address(i2c_sonar, sonar[id]);
   mraa_result_t result;
   result = mraa_i2c_write_byte(i2c_sonar, 0x51);
   if (result != MRAA_SUCCESS) {
@@ -23,6 +23,7 @@ mraa_result_t pingSonar(int id) {
 }
 
 mraa_result_t updateSonar(int id) {
+  mraa_i2c_address(i2c_sonar, sonar[id]);
   uint8_t buf[2];
   int value;
   mraa_result_t result;
