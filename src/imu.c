@@ -283,7 +283,9 @@ void imu_init(int bus) {
 }
 
 void imu_update() {
+  printf("imu_update\n");
   acc_update();
   //gyro_update();
   mag_update();
+  printf("imu_done\n");
 }

@@ -93,7 +93,7 @@ void write_log_row(int log) {
       if (log == 0 && (i == LATITUDE || i == LONGITUDE)) {
 			  fprintf(fp[log],"%0.6f\t",log_arrays[log][i]);
       } else if (log == 1 && i == TIME_2) {
-        fprintf(fp[log], "TIME");
+        fprintf(fp[log], "TIME\t");
       } else {
 			  fprintf(fp[log],"%0.2f\t",log_arrays[log][i]);
       }
