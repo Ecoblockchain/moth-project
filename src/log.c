@@ -92,6 +92,8 @@ void write_log_row(int log) {
 		for (i = 0 ; i < log_array_max[log] ; i++){
       if (log == 0 && (i == LATITUDE || i == LONGITUDE)) {
 			  fprintf(fp[log],"%0.6f\t",log_arrays[log][i]);
+      } else if (log == 1 && i == TIME_2) {
+        fprintf(fp[log], "TIME");
       } else {
 			  fprintf(fp[log],"%0.2f\t",log_arrays[log][i]);
       }
