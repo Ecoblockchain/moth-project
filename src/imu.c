@@ -287,5 +287,4 @@ void imu_update() {
   acc_update();
   //gyro_update();
   mag_update();
-  printf("imu_done\n");
 }
