@@ -53,6 +53,7 @@ void begin() {
 	toggler = mraa_gpio_init(TOGGLER);
 	mraa_gpio_dir(toggler, MRAA_GPIO_IN);
 	imu_init(IMU_I2C_BUS);
+	arduino_init();
 
 	signal(SIGINT, sig_handler);
 

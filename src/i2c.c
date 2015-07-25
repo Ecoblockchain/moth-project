@@ -4,6 +4,7 @@ void imuRead() {
   int i;
   for (i = 0; i < 4; i++) {
     imu_update();
+    analog_update();
     usleep(10000);
   }
 }

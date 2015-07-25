@@ -40,5 +40,8 @@ mraa_result_t gyro_update();
 void gyro_calibrate();
 mraa_result_t mag_update();
 
+void arduino_init();
+void analog_update();
+
 
 #endif /* SHARED_H_ */
