@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
+#include <time.h>
 #include <signal.h>
 #include <mraa/gpio.h>
 #include "shared.h"
