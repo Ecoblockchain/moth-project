@@ -3,7 +3,7 @@ SDIR=src
 ODIR=$(SDIR)/obj
 CC=gcc
 RM=rm -rf
-CFLAGS=-Wall
+CFLAGS=-Wall -O2
 LDLIBS=-pthread -lmraa -lm -lrt
 FILE=moth
 
