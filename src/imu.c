@@ -102,13 +102,14 @@ uint8_t acc_getScale() {
 
 mraa_result_t acc_update() {
   mraa_result_t result;
+  int bytesRead;
   result = mraa_i2c_write_byte(acc_context, ADXL345_XOUT_L);
   if (result != MRAA_SUCCESS) {
     printf("ERROR: unable to write to accelerometer (2)\n");
     return result;
   }
-  result = mraa_i2c_read(acc_context, acc_buffer, DATA_REG_SIZE);
-  if (result != MRAA_SUCCESS) {
+  bytesRead = mraa_i2c_read(acc_context, acc_buffer, DATA_REG_SIZE);
+  if (bytesRead != DATA_REG_SIZE) {
     printf("ERROR: unable to read from accelerometer (3)\n");
     return result;
   }
@@ -268,13 +269,14 @@ float mag_heading() {
 
 mraa_result_t mag_update() {
   mraa_result_t result;
+  int bytesRead;
   result = mraa_i2c_write_byte(mag_context, HMC5883L_DATA_REG);
   if (result != MRAA_SUCCESS) {
     printf("ERROR: unable to write to compass (9)\n");
     return result;
   }
-  result = mraa_i2c_read(mag_context, mag_rx_tx_buf, DATA_REG_SIZE);
-  if (result != MRAA_SUCCESS) {
+  bytesRead = mraa_i2c_read(mag_context, mag_rx_tx_buf, DATA_REG_SIZE);
+  if (bytesRead != DATA_REG_SIZE) {
     printf("ERROR: unable to read from compass (10)\n");
     return result;
   }
