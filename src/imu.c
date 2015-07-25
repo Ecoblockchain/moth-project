@@ -92,7 +92,7 @@ uint8_t acc_getScale() {
   uint8_t result;
 
   if (mraa_i2c_write_byte(acc_context, ADXL345_DATA_FORMAT) != MRAA_SUCCESS) {
-    printf("ERROR: unable to write to accelerometer\n");
+    printf("ERROR: unable to write to accelerometer (1)\n");
   }
 
   result = mraa_i2c_read_byte(acc_context);
@@ -104,12 +104,12 @@ mraa_result_t acc_update() {
   mraa_result_t result;
   result = mraa_i2c_write_byte(acc_context, ADXL345_XOUT_L);
   if (result != MRAA_SUCCESS) {
-    printf("ERROR: unable to write to accelerometer\n");
+    printf("ERROR: unable to write to accelerometer (2)\n");
     return result;
   }
   result = mraa_i2c_read(acc_context, acc_buffer, DATA_REG_SIZE);
   if (result != MRAA_SUCCESS) {
-    printf("ERROR: unable to read from accelerometer\n");
+    printf("ERROR: unable to read from accelerometer (3)\n");
     return result;
   }
 
@@ -141,7 +141,7 @@ mraa_result_t gyro_init(int bus) {
   gyro_buffer[1] = ITG3200_RESET;
   result = mraa_i2c_write(gyro_context, gyro_buffer, 2);
   if (result != MRAA_SUCCESS) {
-    printf("ERROR: unable to write to gyro\n");
+    printf("ERROR: unable to write to gyro (4)\n");
     return result;
   }
 
@@ -196,13 +196,13 @@ mraa_result_t gyro_update() {
   mraa_result_t result;
   result = mraa_i2c_write_byte(gyro_context, ITG3200_TEMP_H);
   if (result != MRAA_SUCCESS) {
-    printf("ERROR: unable to write to gyro\n");
+    printf("ERROR: unable to write to gyro (5)\n");
     return result;
   }
 
   result = mraa_i2c_read(gyro_context, gyro_buffer, DATA_REG_SIZE);
   if (result != MRAA_SUCCESS) {
-    printf("ERROR: unable to read from gyro\n");
+    printf("ERROR: unable to read from gyro (6)\n");
     return result;
   }
 
@@ -237,7 +237,7 @@ mraa_result_t mag_init(int bus) {
   mag_rx_tx_buf[1] = GA_1_3_REG;
   result = mraa_i2c_write(mag_context, mag_rx_tx_buf, 2);
   if (result != MRAA_SUCCESS) {
-    printf("ERROR: unable to write to compass\n");
+    printf("ERROR: unable to write to compass (7)\n");
     return result;
   }
 
@@ -246,7 +246,7 @@ mraa_result_t mag_init(int bus) {
   mag_rx_tx_buf[1] = HMC5883L_CONT_MODE;
   result = mraa_i2c_write(mag_context, mag_rx_tx_buf, 2);
   if (result != MRAA_SUCCESS) {
-    printf("ERROR: unable to read from compass\n");
+    printf("ERROR: unable to read from compass (8)\n");
     return result;
   }
 
@@ -270,12 +270,12 @@ mraa_result_t mag_update() {
   mraa_result_t result;
   result = mraa_i2c_write_byte(mag_context, HMC5883L_DATA_REG);
   if (result != MRAA_SUCCESS) {
-    printf("ERROR: unable to write to compass\n");
+    printf("ERROR: unable to write to compass (9)\n");
     return result;
   }
   result = mraa_i2c_read(mag_context, mag_rx_tx_buf, DATA_REG_SIZE);
   if (result != MRAA_SUCCESS) {
-    printf("ERROR: unable to read from compass\n");
+    printf("ERROR: unable to read from compass (10)\n");
     return result;
   }
 
