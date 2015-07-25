@@ -24,6 +24,7 @@ FILE* fp[2];
 char filenames[2][100];
 double log_arrays[2][LOG_2_ARRAY_MAX];
 int files_open = 0;
+int begun = 0;
 int log_array_max[] = {LOG_1_ARRAY_MAX, LOG_2_ARRAY_MAX};
 char mark[20] = "";
 
@@ -63,7 +64,6 @@ void parseSonar(int index, int value) {
 
 void open_files(char *time, char *date){
 	if (files_open == 1) return;
-	clock_gettime(CLOCK_MONOTONIC, &start_time);
 	char timestamp[15];
 	sprintf(timestamp,"20%c%c%c%c%c%c%c%c%c%c.0",date[4],date[5],date[2],date[3],date[0],date[1],time[0],time[1],time[2],time[3]);
 	printf("ST Log File Opened  /home/root/log/log_%s\n",timestamp);
@@ -91,6 +91,10 @@ fprintf(fp[1], "ROW\tTIME\tACC_X\tACC_Y\tACC_Z\tANG_X\tANG_Y\tANG_Z\tTEMP\tHEADI
 
 void write_log_row(int log) {
 	fp[log] = fopen(filenames[log], "a");
+  if (begun == 0) {
+	  clock_gettime(CLOCK_MONOTONIC, &start_time);
+    begun = 1;
+  }
 	static int j[] = {1, 1};
 	int i = 0;
 	fprintf(fp[log],"%d\t",j[log]++);
@@ -166,7 +170,7 @@ void* logWriter() {
     write_log_row(0);
     for (i = 0; i < 10; i++) {
       write_log_row(1);
-      usleep(10000);
+      usleep(9750);
     }
   }
 }
