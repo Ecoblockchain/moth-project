@@ -29,9 +29,9 @@ mraa_result_t updateSonar(int id) {
   mraa_i2c_address(i2c_sonar, sonar[id]);
   uint8_t buf[2];
   int value;
-  mraa_result_t result;
+  int result;
   result = mraa_i2c_read(i2c_sonar, buf, 2);
-  if (result != MRAA_SUCCESS) {
+  if (result != 2) {
     printf("ERROR: unable to read from sonar %i\n", id);
     return result;
   }
