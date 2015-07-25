@@ -102,11 +102,12 @@ uint8_t acc_getScale() {
 }
 
 mraa_result_t acc_update() {
-    mraa_i2c_address(acc_context, ADXL345_I2C_ADDR);
+    printf("acc_update");
     mraa_i2c_write_byte(acc_context, ADXL345_XOUT_L);
+    printf("acc_one");
 
-    mraa_i2c_address(acc_context, ADXL345_I2C_ADDR);
     mraa_i2c_read(acc_context, acc_buffer, DATA_REG_SIZE);
+    printf("acc_two\n");
 
     // x
     acc_rawaccel[0] = ((acc_buffer[1] << 8 ) | acc_buffer[0]);
@@ -283,7 +284,6 @@ void imu_init(int bus) {
 }
 
 void imu_update() {
-  printf("imu_update\n");
   acc_update();
   printf("imu_two\n");
   //gyro_update();
