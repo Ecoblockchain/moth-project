@@ -15,6 +15,7 @@ void save_log_value(int, double, int);
 void write_log();
 void log_error(char *message);
 void parseSonar(int index, int value);
+void printError(char* message);
 
 // main
 void* gpsRead();

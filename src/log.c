@@ -174,3 +174,7 @@ void* logWriter() {
     }
   }
 }
+
+void printError(char* message) {
+  printf("[%0.6f] ERROR: %s", getTime(), message);
+}

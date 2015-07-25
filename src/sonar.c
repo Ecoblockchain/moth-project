@@ -7,6 +7,7 @@
 uint8_t sonar[] = {0x04, 0x06, 0x08, 0x0a};
 int arrayValues[] = {SONAR_1, SONAR_2, SONAR_3, SONAR_4};
 mraa_i2c_context i2c_sonar;
+char* errorMessage;
 
 void initSonar() {
   printf("WARNING: ignoring sonars 3 and 4\n");
@@ -19,7 +20,8 @@ mraa_result_t pingSonar(int id) {
   mraa_result_t result;
   result = mraa_i2c_write_byte(i2c_sonar, 0x51);
   if (result != MRAA_SUCCESS) {
-    printf("ERROR: unable to write to sonar %i\n", id);
+    sprintf(errorMessage, "unable to write to sonar %i\n", id);
+    printError(errorMessage);
   }
   return result;
 }
@@ -32,7 +34,8 @@ mraa_result_t updateSonar(int id) {
   int result;
   result = mraa_i2c_read(i2c_sonar, buf, 2);
   if (result != 2) {
-    printf("ERROR: unable to read from sonar %i\n", id);
+    sprintf(errorMessage, "unable to read from sonar %i\n", id);
+    printError(errorMessage);
     return result;
   }
   value =  (buf[0] << 8) | buf[1];
