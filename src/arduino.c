@@ -13,7 +13,7 @@ int bytesToInt(uint8_t high, uint8_t low) {
 
 void arduino_init() {
     arduino_context = mraa_i2c_init(1);
-    mraa_i2c_address(arduino_context, 0x7f);
+    mraa_i2c_address(arduino_context, 0x75);
 }
 
 void analog_update() {

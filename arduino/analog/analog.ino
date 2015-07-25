@@ -5,7 +5,7 @@ int values[4];
 int updating;
 
 void setup() {
-  Wire.begin(0x7f);
+  Wire.begin(0x75);
   Wire.onRequest(requestEvent);
   updating = 0;
 }
