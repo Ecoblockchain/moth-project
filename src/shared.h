@@ -43,5 +43,7 @@ mraa_result_t mag_update();
 void arduino_init();
 void analog_update();
 
+extern struct timespec start_time, current_time;
+
 
 #endif /* SHARED_H_ */

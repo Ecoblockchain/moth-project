@@ -54,6 +54,7 @@ void begin() {
 	mraa_gpio_dir(toggler, MRAA_GPIO_IN);
 	imu_init(IMU_I2C_BUS);
 	arduino_init();
+	clock_gettime(CLOCK_MONOTONIC, &start_time);
 
 	signal(SIGINT, sig_handler);
 

@@ -41,6 +41,11 @@ double convert2(double number, char direction){
         return number;
 }
 
+double getTime() {
+  clock_gettime(CLOCK_MONOTONIC, &current_time);
+  return (current_time.tv_sec = start_time.tv_sec) + (current_time.tv_nsec - start_time.tv_nsec) / 1E9;
+}
+
 
 void save_log_value(int index, double data, int log) {
 	if(index < 0 || index >= log_array_max[log]) return;
@@ -93,7 +98,7 @@ void write_log_row(int log) {
       if (log == 0 && (i == LATITUDE || i == LONGITUDE)) {
 			  fprintf(fp[log],"%0.6f\t",log_arrays[log][i]);
       } else if (log == 1 && i == TIME_2) {
-        fprintf(fp[log], "TIME\t");
+        fprintf(fp[log], "%0.2f\t", getTime());
       } else {
 			  fprintf(fp[log],"%0.2f\t",log_arrays[log][i]);
       }

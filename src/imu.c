@@ -280,10 +280,7 @@ void imu_init(int bus) {
 }
 
 void imu_update() {
-    printf("one");
   acc_update();
-    printf("two");
   //gyro_update();
   mag_update();
-    printf("three\n");
 }
