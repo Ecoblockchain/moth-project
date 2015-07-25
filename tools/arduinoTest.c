@@ -19,6 +19,6 @@ int main() {
       printf("%i\t", convert(buf[i], buf[i + 1]));
     }
     printf("\n");
-    usleep(300000);
+    usleep(10000);
   }
 }
