@@ -18,8 +18,9 @@ void arduino_init() {
 
 void analog_update() {
   mraa_i2c_read(arduino_context, arduino_buffer, 8);
-  save_log_value(ANALOG_0, bytesToInt(arduino_buffer[0], arduino_buffer[1]), 1);
-  save_log_value(ANALOG_1, bytesToInt(arduino_buffer[2], arduino_buffer[3]), 1);
-  save_log_value(ANALOG_2, bytesToInt(arduino_buffer[4], arduino_buffer[5]), 1);
-  save_log_value(ANALOG_3, bytesToInt(arduino_buffer[6], arduino_buffer[7]), 1);
+  int i, val;
+  for (i = 0; i < 4; i++) {
+    val = bytesToInt(arduino_buffer[i * 2], arduino_buffer[(i * 2) + 1]);
+    if (val < 10000) save_log_value(ANALOG_0 + i, val, 1);
+  }
 }
