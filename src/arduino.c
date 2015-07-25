@@ -7,20 +7,23 @@
 mraa_i2c_context arduino_context;
 uint8_t arduino_buffer[8];
 
-int bytesToInt(uint8_t high, uint8_t low) {
-  return (high << 8) | low;
-}
-
 void arduino_init() {
     arduino_context = mraa_i2c_init(1);
-    mraa_i2c_address(arduino_context, 0x75);
+    if (arduino_context == NULL) {
+      printf("ERROR: unable to initialize arduino_context\n");
+    }
+    if (mraa_i2c_address(arduino_context, 0x75) != MRAA_SUCCESS) {
+      printf("ERROR: unable to set arduino_context address\n");
+    }
 }
 
 void analog_update() {
-  mraa_i2c_read(arduino_context, arduino_buffer, 8);
+  if (mraa_i2c_read(arduino_context, arduino_buffer, 8) != 8) {
+    printf("ERROR: unable to read bytes from arduino\n");
+  }
   int i, val;
   for (i = 0; i < 4; i++) {
-    val = bytesToInt(arduino_buffer[i * 2], arduino_buffer[(i * 2) + 1]);
+    val = (arduino_buffer[i * 2] << 8) | arduino_buffer[(i * 2) + 1];
     if (val < 10000) save_log_value(ANALOG_0 + i, val, 1);
   }
 }

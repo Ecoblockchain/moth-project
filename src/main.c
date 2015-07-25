@@ -1,9 +1,3 @@
-/*
- * main.c
- *
- *      Author: James Vaughan
- */
-
 #include <pthread.h>
 #include <stdlib.h>
 #include <errno.h>

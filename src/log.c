@@ -29,17 +29,17 @@ int log_array_max[] = {LOG_1_ARRAY_MAX, LOG_2_ARRAY_MAX};
 char mark[20] = "";
 
 double convert(double number, char direction){
-        double latlong = number;
-        int degrees = (int)(latlong / 100);
-        latlong = latlong - degrees * 100; // these are minutes
-        latlong = ( degrees + latlong / 60 );
-        if ( direction == 'S'  || direction == 'W' ) latlong = -latlong;
-        return latlong;
+  double latlong = number;
+  int degrees = (int)(latlong / 100);
+  latlong = latlong - degrees * 100; // these are minutes
+  latlong = ( degrees + latlong / 60 );
+  if ( direction == 'S'  || direction == 'W' ) latlong = -latlong;
+  return latlong;
 }
 
 double convert2(double number, char direction){
-        if ( direction == 'S'  || direction == 'W' ) number = -number;
-        return number;
+  if ( direction == 'S'  || direction == 'W' ) number = -number;
+  return number;
 }
 
 double getTime() {
@@ -149,18 +149,18 @@ void parse_rmc(char *buffer){
 }
 
 int str_split(char **array, char *buf, char *sep, int max){
-                // takes string buf and breaks it up into sub strings which array will point at
-                // at most max elements in array
-                // input buf will be modified
-        char *token;
-        int i = 0;
-        int size = 0;
-        while ( ( i < max -1 ) && ((token = strsep(&buf,sep))!= NULL ) ) {
-                array[i++] = token;
-                }
-        array[i] = NULL;  // set to null
-        size = i;
-    return size;
+  // takes string buf and breaks it up into sub strings which array will point at
+  // at most max elements in array
+  // input buf will be modified
+  char *token;
+  int i = 0;
+  int size = 0;
+  while ( ( i < max -1 ) && ((token = strsep(&buf,sep))!= NULL ) ) {
+    array[i++] = token;
+  }
+  array[i] = NULL;  // set to null
+  size = i;
+  return size;
 }
 
 void* logWriter() {

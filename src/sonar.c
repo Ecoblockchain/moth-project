@@ -10,18 +10,28 @@ mraa_i2c_context i2c_sonar;
 
 void initSonar() {
   i2c_sonar = mraa_i2c_init(1);
-}
-
-void pingSonar(int id) {
   mraa_i2c_address(i2c_sonar, sonar[id]);
-  mraa_i2c_write_byte(i2c_sonar, 0x51);
 }
 
-void updateSonar(int id) {
+mraa_result_t pingSonar(int id) {
+  mraa_result_t result;
+  result = mraa_i2c_write_byte(i2c_sonar, 0x51);
+  if (result != MRAA_SUCCESS) {
+    printf("ERROR: unable to write to sonar %i\n", id);
+  }
+  return result;
+}
+
+mraa_result_t updateSonar(int id) {
   uint8_t buf[2];
   int value;
-  mraa_i2c_address(i2c_sonar, sonar[id]);
-  mraa_i2c_read(i2c_sonar, buf, 2);
+  mraa_result_t result;
+  result = mraa_i2c_read(i2c_sonar, buf, 2);
+  if (result != MRAA_SUCCESS) {
+    printf("ERROR: unable to read from sonar %i\n", id);
+    return result;
+  }
   value =  (buf[0] << 8) | buf[1];
   parseSonar(arrayValues[id], value);
+  return MRAA_SUCCESS;
 }

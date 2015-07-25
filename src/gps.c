@@ -71,15 +71,22 @@ void initGps() {
 	char *freqSetting = "$PMTK220,100*2F\r\n\0";
 	tty_fd_gps = open("/dev/ttyMFD1", O_RDWR);
 	struct termios tio;
+
+	// set Edison UART to 9600 baud
 	tcgetattr(tty_fd_gps, &tio);
 	cfsetspeed(&tio, B9600);
 	cfmakeraw(&tio);
 	tcsetattr(tty_fd_gps, TCSANOW, &tio);
+	// set gps to 115200 baud if it wasn't already
 	write(tty_fd_gps, baudSetting, strlen(baudSetting));
+
+	// set Edison UART to 115200 baud
 	tcgetattr(tty_fd_gps, &tio);
 	cfsetspeed(&tio, B115200);
 	cfmakeraw(&tio);
 	tcsetattr(tty_fd_gps, TCSADRAIN, &tio);
+
+	// tell gps to only send the RMC at 10hz
 	write(tty_fd_gps, dataSetting, strlen(dataSetting));
 	write(tty_fd_gps, freqSetting, strlen(freqSetting));
 }

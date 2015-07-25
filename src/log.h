@@ -1,10 +1,3 @@
-/*
- * log.h
- *
- *  Created on: Jan 28, 2015
- *      Authors: Doris, James Vaughan
- */
-
 #ifndef LOG_H_
 #define LOG_H_
 

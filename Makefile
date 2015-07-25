@@ -1,4 +1,5 @@
 # Makefile for Red Bull Moth Project 2015
+# Author: James Vaughan
 SDIR=src
 ODIR=$(SDIR)/obj
 CC=gcc
