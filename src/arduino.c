@@ -7,7 +7,7 @@
 mraa_i2c_context arduino_context;
 uint8_t arduino_buffer[8];
 
-int convert(uint8_t high, uint8_t low) {
+int bytesToInt(uint8_t high, uint8_t low) {
   return (high << 8) | low;
 }
 
@@ -18,8 +18,8 @@ void arduino_init() {
 
 void analog_update() {
   mraa_i2c_read(arduino_context, arduino_buffer, 8);
-  save_log_value(ANALOG_0, convert(arduino_buffer[0], arduino_buffer[1]), 1);
-  save_log_value(ANALOG_1, convert(arduino_buffer[2], arduino_buffer[3]), 1);
-  save_log_value(ANALOG_2, convert(arduino_buffer[4], arduino_buffer[5]), 1);
-  save_log_value(ANALOG_3, convert(arduino_buffer[6], arduino_buffer[7]), 1);
+  save_log_value(ANALOG_0, bytesToInt(arduino_buffer[0], arduino_buffer[1]), 1);
+  save_log_value(ANALOG_1, bytesToInt(arduino_buffer[2], arduino_buffer[3]), 1);
+  save_log_value(ANALOG_2, bytesToInt(arduino_buffer[4], arduino_buffer[5]), 1);
+  save_log_value(ANALOG_3, bytesToInt(arduino_buffer[6], arduino_buffer[7]), 1);
 }
