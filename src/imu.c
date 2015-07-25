@@ -232,6 +232,7 @@ mraa_result_t gyro_update() {
 
 mraa_result_t mag_init(int bus) {
   mag_context = mraa_i2c_init(bus);
+  mraa_i2c_address(mag_context, HMC5883L_I2C_ADDR);
   mraa_result_t result;
 
   mag_rx_tx_buf[0] = HMC5883L_CONF_REG_B;
