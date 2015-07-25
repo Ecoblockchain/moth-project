@@ -124,6 +124,7 @@ mraa_result_t acc_update() {
     save_log_value(ACC_Y, acc[1], 1);
     save_log_value(ACC_Z, acc[2], 1);
 
+    printf("acc_three\n");
     return MRAA_SUCCESS;
 }
 
