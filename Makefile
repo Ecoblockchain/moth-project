@@ -7,7 +7,7 @@ CFLAGS=-Wall
 LDLIBS=-pthread -lmraa -lm
 FILE=moth
 
-_OBJ=main.o gps.o log.o sonar.o imu.o i2c.o
+_OBJ=main.o gps.o log.o sonar.o imu.o i2c.o arduino.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
 _HEADERS=shared.h log.h
