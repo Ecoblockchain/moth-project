@@ -35,6 +35,7 @@ mraa_result_t updateSonar(int id) {
     printf("ERROR: unable to read from sonar %i\n", id);
     return result;
   }
+  printf("SUCCESSFULLY READ FROM SONAR %i\n", id);
   value =  (buf[0] << 8) | buf[1];
   parseSonar(arrayValues[id], value);
   return MRAA_SUCCESS;
