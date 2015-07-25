@@ -21,7 +21,7 @@
 pthread_t threads[MAX_THREADS];
 mraa_gpio_context status;
 mraa_gpio_context toggler;
-struct timespec start_time;
+struct timespec start_time, current_time;
 int cont;
 
 void startAll() {
