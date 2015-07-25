@@ -85,9 +85,9 @@ fprintf(fp[1], "ROW\tTIME\tACC_X\tACC_Y\tACC_Z\tANG_X\tANG_Y\tANG_Z\tTEMP\tCOMPA
 
 void write_log_row(int log) {
 	fp[log] = fopen(filenames[log], "a");
-	static int j = 1;
+	static int j[] = {1, 1};
 	int i = 0;
-	fprintf(fp[log],"%d\t",j++);
+	fprintf(fp[log],"%d\t",j[log]++);
 	pthread_mutex_lock(log_locks[log]);
 		for (i = 0 ; i < log_array_max[log] ; i++){
       if (log == 0 && (i == LATITUDE || i == LONGITUDE)) {

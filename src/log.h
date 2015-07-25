@@ -28,9 +28,6 @@
 #define ANG_Y 5
 #define ANG_Z 6
 #define TEMP 7
-#define COMPASS_X 8
-#define COMPASS_Y 9
-#define COMPASS_Z 10
 #define HEADING 11
 #define DIRECTION 12
 #define ANALOG_0 13
@@ -46,6 +43,9 @@
 #define RAW_ANG_Y 23
 #define RAW_ANG_Z 24
 #define RAW_TEMP 25
+#define RAW_COMPASS_X 8
+#define RAW_COMPASS_Y 9
+#define RAW_COMPASS_Z 10
 #define	LOG_2_ARRAY_MAX	26
 
 #endif /* LOG_H_ */

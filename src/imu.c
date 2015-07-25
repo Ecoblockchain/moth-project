@@ -115,6 +115,14 @@ mraa_result_t acc_update() {
     // z
     acc_rawaccel[2] = ((acc_buffer[5] << 8 ) | acc_buffer[4]);
 
+    save_log_value(RAW_ACC_X, acc_rawaccel[0], 1);
+    save_log_value(RAW_ACC_Y, acc_rawaccel[1], 1);
+    save_log_value(RAW_ACC_Z, acc_rawaccel[2], 1);
+    float* acc = acc_getAcceleration();
+    save_log_value(ACC_X, acc[0], 1);
+    save_log_value(ACC_Y, acc[1], 1);
+    save_log_value(ACC_Z, acc[2], 1);
+
     return MRAA_SUCCESS;
 }
 
@@ -246,9 +254,9 @@ mraa_result_t mag_update() {
     // y
     mag_coor[1] = (mag_rx_tx_buf[HMC5883L_Y_MSB_REG] << 8 ) | mag_rx_tx_buf[HMC5883L_Y_LSB_REG];
 
-    save_log_value(COMPASS_X, mag_coor[0], 1);
-    save_log_value(COMPASS_Y, mag_coor[1], 1);
-    save_log_value(COMPASS_Z, mag_coor[2], 1);
+    save_log_value(RAW_COMPASS_X, mag_coor[0], 1);
+    save_log_value(RAW_COMPASS_Y, mag_coor[1], 1);
+    save_log_value(RAW_COMPASS_Z, mag_coor[2], 1);
     save_log_value(HEADING, mag_heading(), 1);
     save_log_value(DIRECTION, mag_direction(), 1);
 
