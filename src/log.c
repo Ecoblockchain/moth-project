@@ -170,7 +170,7 @@ void* logWriter() {
     write_log_row(0);
     for (i = 0; i < 10; i++) {
       write_log_row(1);
-      usleep(9750);
+      usleep(9000);
     }
   }
 }

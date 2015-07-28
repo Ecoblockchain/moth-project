@@ -30,3 +30,6 @@ clean-logs:
 
 install:
 	cp $(FILE) /bin/moth
+
+push:
+	rsync -rP --delete . debian@192.168.7.2:~/
