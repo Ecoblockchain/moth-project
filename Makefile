@@ -5,13 +5,13 @@ ODIR=$(SDIR)/obj
 CC=gcc
 RM=rm -rf
 CFLAGS=-Wall
-LDLIBS=-pthread -lmraa -lm -lrt
+LDLIBS=-pthread -lm -lrt
 FILE=moth
 
-_OBJ=main.o gps.o log.o sonar.o imu.o i2c.o arduino.o
+_OBJ=main.o gps.o log.o sonar.o switch.o imu.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
-_HEADERS=shared.h log.h
+_HEADERS=sonar.h log.h gps.h switch.h imu.h
 HEADERS=$(patsubst %,src/%,$(_HEADERS))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(HEADERS)
@@ -26,10 +26,10 @@ clean:
 	$(RM) $(FILE) $(ODIR)/* $(SDIR)/*~
 
 clean-logs:
-	$(RM) /home/root/log/*
+	$(RM) /root/log/*
 
 install:
 	cp $(FILE) /bin/moth
 
 push:
-	rsync -rP --delete . debian@192.168.7.2:~/moth-project
+	rsync -rP --delete . root@192.168.7.2:~/moth-project

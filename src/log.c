@@ -13,12 +13,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <ctype.h>
-#include "shared.h"
 #include "log.h"
 
 pthread_mutex_t log_lock_1 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t log_lock_2 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t* log_locks[] = {&log_lock_1, &log_lock_2};
+struct timespec start_time, current_time;
 
 FILE* fp[2];
 char filenames[2][100];
@@ -44,7 +44,7 @@ double convert2(double number, char direction){
 
 double getTime() {
   clock_gettime(CLOCK_MONOTONIC, &current_time);
-  return (current_time.tv_sec = start_time.tv_sec) + (current_time.tv_nsec - start_time.tv_nsec) / 1E9;
+  return (current_time.tv_sec - start_time.tv_sec) + (current_time.tv_nsec - start_time.tv_nsec) / 1E9;
 }
 
 
@@ -55,18 +55,11 @@ void save_log_value(int index, double data, int log) {
 	pthread_mutex_unlock(log_locks[log]);
 }
 
-void parseSonar(int index, int value) {
-	if (index < 0 || index >= LOG_1_ARRAY_MAX) return;
-	pthread_mutex_lock(log_locks[0]);
-		log_arrays[0][index] = value;
-	pthread_mutex_unlock(log_locks[0]);
-}
-
 void open_files(char *time, char *date){
 	if (files_open == 1) return;
 	char timestamp[15];
 	sprintf(timestamp,"20%c%c%c%c%c%c%c%c%c%c.0",date[4],date[5],date[2],date[3],date[0],date[1],time[0],time[1],time[2],time[3]);
-	printf("ST Log File Opened  /home/root/log/log_%s\n",timestamp);
+	printf("ST Log File Opened  /root/log/log_%s\n",timestamp);
 	char sys[25];
 	strcpy(sys,"date ");
 	strcat(sys,timestamp);
@@ -74,7 +67,7 @@ void open_files(char *time, char *date){
 	timestamp[12] = '\0';
   struct stat st = {0};
   char folder[35];
-  sprintf(folder, "/home/root/log/log_%s", timestamp);
+  sprintf(folder, "/root/log/log_%s", timestamp);
   if (stat(folder, &st)) {
     mkdir(folder, 0700);
   }
@@ -113,6 +106,21 @@ void write_log_row(int log) {
 	fclose(fp[log]);
 }
 
+int str_split(char **array, char *buf, char *sep, int max){
+  // takes string buf and breaks it up into sub strings which array will point at
+  // at most max elements in array
+  // input buf will be modified
+  char *token;
+  int i = 0;
+  int size = 0;
+  while ( ( i < max -1 ) && ((token = strsep(&buf,sep))!= NULL ) ) {
+    array[i++] = token;
+  }
+  array[i] = NULL;  // set to null
+  size = i;
+  return size;
+}
+
 /***************************************************
  $--RMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,xxxx,x.x,a*hh
  0) $--RMC
@@ -129,7 +137,6 @@ void write_log_row(int log) {
 11) E or W
 12) Checksum
 ******************************************************/
-
 
 void parse_rmc(char *buffer){
 	char local_buffer[100];
@@ -148,33 +155,14 @@ void parse_rmc(char *buffer){
 	if (files_open == 0) open_files(array[1],array[9]);
 }
 
-int str_split(char **array, char *buf, char *sep, int max){
-  // takes string buf and breaks it up into sub strings which array will point at
-  // at most max elements in array
-  // input buf will be modified
-  char *token;
-  int i = 0;
-  int size = 0;
-  while ( ( i < max -1 ) && ((token = strsep(&buf,sep))!= NULL ) ) {
-    array[i++] = token;
-  }
-  array[i] = NULL;  // set to null
-  size = i;
-  return size;
-}
-
-void* logWriter() {
+void* log_begin() {
   int i;
   while (files_open == 0);
   while (1) {
     write_log_row(0);
     for (i = 0; i < 10; i++) {
       write_log_row(1);
-      usleep(9000);
+      usleep(10000);
     }
   }
-}
-
-void printError(char* message) {
-  printf("[%0.6f] ERROR: %s\n", getTime(), message);
 }

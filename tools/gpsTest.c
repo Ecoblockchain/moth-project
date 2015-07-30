@@ -9,11 +9,9 @@
 #include <termios.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include "log.h"
-#include "gps.h"
 
-const char* gps_dev = "/dev/ttyO4";
-volatile int gps_fd;
+char* dev = "/dev/ttyO1";
+volatile int tty_fd_gps;
 
 // used by verify_nmea
 void btoh(unsigned char c, char *str) {
@@ -66,49 +64,44 @@ int verify_nmea(char *string){
 }
 
 // initialize the gps
-int gps_init() {
+void initGps() {
 	char *dataSetting = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n";
 	char *baudSetting = "$PMTK251,115200*1F\r\n";
 	char *freqSetting = "$PMTK220,100*2F\r\n";
-	gps_fd = open(gps_dev, O_RDWR);
-	if (gps_fd < 0) {
-		printf("ERROR: couldn't open gps file descriptor\n");
-		return -1;
-	}
+	tty_fd_gps = open(dev, O_RDWR);
 	struct termios tio;
 
 	// set Edison UART to 9600 baud
-	tcgetattr(gps_fd, &tio);
+	tcgetattr(tty_fd_gps, &tio);
 	cfsetspeed(&tio, B9600);
 	cfmakeraw(&tio);
-	tcsetattr(gps_fd, TCSANOW, &tio);
+	tcsetattr(tty_fd_gps, TCSANOW, &tio);
 	// set gps to 115200 baud if it wasn't already
-	write(gps_fd, baudSetting, strlen(baudSetting));
+	write(tty_fd_gps, baudSetting, strlen(baudSetting));
 
 	// set Edison UART to 115200 baud
-	tcgetattr(gps_fd, &tio);
+	tcgetattr(tty_fd_gps, &tio);
 	cfsetspeed(&tio, B115200);
 	cfmakeraw(&tio);
-	tcsetattr(gps_fd, TCSADRAIN, &tio);
+	tcsetattr(tty_fd_gps, TCSADRAIN, &tio);
 
 	// tell gps to only send the RMC at 10hz
-	write(gps_fd, dataSetting, strlen(dataSetting));
-	write(gps_fd, freqSetting, strlen(freqSetting));
-	return 0;
+	write(tty_fd_gps, dataSetting, strlen(dataSetting));
+	write(tty_fd_gps, freqSetting, strlen(freqSetting));
 }
 
 // read from the gps forever
-void* gps_begin() {
+int main() {
 	printf("GPS read is running\n");
 	char aa;
 	char local_buffer[500];
 	int idx = 0;
-	gps_init();
-	tcflush(gps_fd, TCIFLUSH);
+	initGps();
+	tcflush(tty_fd_gps, TCIFLUSH);
 	int read_more = 0;
 
 	while (1) {
-		while (read(gps_fd, &aa, 1) == -1 || (aa != '$' && read_more != 1));   // read 1 character from stream (blocking call)
+		while (read(tty_fd_gps, &aa, 1) == -1 || (aa != '$' && read_more != 1));   // read 1 character from stream (blocking call)
 		read_more = 1;
 		if (aa != '\n') {
 			local_buffer[idx++] = aa;
@@ -119,7 +112,7 @@ void* gps_begin() {
 				int flag = 1;
 				char old = 'x';
 				while (flag == 1) {
-					read(gps_fd, &aa, 1);
+					read(tty_fd_gps, &aa, 1);
 					if (aa == '\n'  && old == '\r') flag = 0;
 					old = aa;
 				}
@@ -136,9 +129,9 @@ void* gps_begin() {
 				} else if (strstr(local_buffer, "RMC")) {
 					// GPS Sentence
 					printf("GPS: %s", local_buffer);
-					parse_rmc(local_buffer);
 				}
 			}
 		}
 	}
+  return 0;
 }

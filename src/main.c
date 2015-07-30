@@ -1,29 +1,23 @@
 #include <pthread.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <unistd.h>
 #include <time.h>
-#include <signal.h>
 #include <mraa/gpio.h>
-#include "shared.h"
+#include "log.h"
+#include "gps.h"
+#include "imu.h"
+#include "switch.h"
+#include "sonar.h"
 
-#define MAX_THREADS 3
-#define IMU_I2C_BUS 1
-#define STATUS_LED 15
-#define TOGGLER 45
+#define MAX_THREADS 4
 
 pthread_t threads[MAX_THREADS];
-mraa_gpio_context status;
-mraa_gpio_context toggler;
-struct timespec start_time, current_time;
-int cont;
 
 void startAll() {
-	pthread_create(&threads[0], NULL, logWriter, NULL);
-	pthread_create(&threads[1], NULL, gpsRead, NULL);
-	pthread_create(&threads[2], NULL, i2cRead, NULL);
-	status = mraa_gpio_init(STATUS_LED);
-	mraa_gpio_dir(status, MRAA_GPIO_OUT_HIGH);
+	pthread_create(&threads[0], NULL, gps_begin, NULL);
+	pthread_create(&threads[1], NULL, sonar_begin, NULL);
+	pthread_create(&threads[2], NULL, imu_begin, NULL);
+	pthread_create(&threads[3], NULL, log_begin, NULL);
 }
 
 void cancelAll() {
@@ -31,31 +25,14 @@ void cancelAll() {
 	for (i = 0; i < MAX_THREADS; i++) {
 		pthread_cancel(threads[i]);
 	}
-	mraa_gpio_write(status, 0);
-	mraa_gpio_close(status);
 }
 
-void sig_handler(int signo) {
-    if (signo == SIGINT) {
-				mraa_gpio_close(toggler);
-        cont = 0;
-    }
-}
-
-void begin() {
+int main() {
 	int running = 0;
-	cont = 1;
-	int toggleOn;
-	toggler = mraa_gpio_init(TOGGLER);
-	mraa_gpio_dir(toggler, MRAA_GPIO_IN);
-	imu_init(IMU_I2C_BUS);
-	arduino_init();
+	switch_init();
 
-	signal(SIGINT, sig_handler);
-
-	while (cont) {
-		toggleOn = mraa_gpio_read(toggler);
-		if (toggleOn) { // start/stop button
+	while (1) {
+		if (switch_status() == 1) { // start/stop button
 			if (!running) {
 				startAll();
 				running = 1;
@@ -68,18 +45,5 @@ void begin() {
 		}
 		usleep(50000);
 	}
-}
-
-int main(int argc, char* argv[]) {
-	int seconds;
-	if (argc > 1) {
-		seconds = atoi(argv[1]);
-		while (seconds > 0) {
-			printf("Starting logger in %i seconds. (Press ctrl+c to abort.)\n", seconds);
-			seconds--;
-			sleep(1);
-		}
-	}
-	begin();
 	return 0;
 }

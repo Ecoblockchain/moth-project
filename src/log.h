@@ -39,4 +39,8 @@
 #define RAW_COMPASS_Z 23
 #define	LOG_2_ARRAY_MAX	24
 
+void parse_rmc(char*);
+void save_log_value(int, double, int);
+void* log_begin();
+
 #endif /* LOG_H_ */
