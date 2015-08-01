@@ -58,7 +58,7 @@ int verify_nmea(char *string){
 	btoh(c,temp);
 	p = strcmp(cs,temp);
 	if (p != 0) {
-		printf("ER CHECKSUM ERROR in %s, %s != %s\n",string, cs, temp);
+		printf("ERROR: CHECKSUM ERROR in %s, %s != %s\n",string, cs, temp);
 		return -1;
 	}
 
@@ -99,7 +99,7 @@ int gps_init() {
 
 // read from the gps forever
 void* gps_begin() {
-	printf("GPS read is running\n");
+	printf("STATUS: GPS read is running\n");
 	char aa;
 	char local_buffer[500];
 	int idx = 0;
@@ -115,7 +115,7 @@ void* gps_begin() {
 			if (idx > 400) {
 				// prevent segmentation faults
 				idx = 0;
-				printf("\nGR ***********************************************\nlocal_buffer overflow in read nmea.\n Connect inputs and Cycle power to recover\n*****************************************\n");
+				printf("\nERROR: ***********************************************\nlocal_buffer overflow in read nmea.\n Connect inputs and Cycle power to recover\n*****************************************\n");
 				int flag = 1;
 				char old = 'x';
 				while (flag == 1) {
@@ -132,7 +132,7 @@ void* gps_begin() {
 			idx = 0;
 			if(verify_nmea(local_buffer) == 0) {
 				if (strstr(local_buffer,",,,,,") && strstr(local_buffer, "RMC")){
-					printf("ST GPS Not Ready %s\n",local_buffer);
+					printf("STATUS: GPS Not Ready %s\n",local_buffer);
 				} else if (strstr(local_buffer, "RMC")) {
 					// GPS Sentence
 					printf("GPS: %s", local_buffer);

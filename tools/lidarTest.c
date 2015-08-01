@@ -11,6 +11,7 @@ int length_data_size;
 
 const char* dev = "/dev/ttyACM0";
 const int baud = 115200;
+char howlong[10000];
 
 int main() {
 	if (urg_open(&lidar, URG_SERIAL, dev, baud) < 0) {
@@ -34,11 +35,10 @@ int main() {
 
 		int i;
 		for (i = 0; i < length_data_size - 1; i++) {
-			if (i % 35 == 0) {
-				printf("%ld\t", length_data[i]);
-			}
+		//		printf("%ld\t", length_data[i]);
 		}
-		printf("%ld\n", length_data[length_data_size]);
+		//printf("%ld\n", length_data[length_data_size]);
+		printf("%i\n", length_data_size);
 
 		usleep(10000);
 	}

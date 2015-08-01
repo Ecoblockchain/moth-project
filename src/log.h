@@ -27,20 +27,26 @@
 #define ANALOG_1 11
 #define ANALOG_2 12
 #define ANALOG_3 13
-#define RAW_ACC_X 14
-#define RAW_ACC_Y 15
-#define RAW_ACC_Z 16
-#define RAW_ANG_X 17
-#define RAW_ANG_Y 18
-#define RAW_ANG_Z 19
-#define RAW_TEMP 20
-#define RAW_COMPASS_X 21
-#define RAW_COMPASS_Y 22
-#define RAW_COMPASS_Z 23
-#define	LOG_2_ARRAY_MAX	24
+#define ANALOG_4 14
+#define ANALOG_5 15
+#define ANALOG_6 16
+#define RAW_ACC_X 17
+#define RAW_ACC_Y 18
+#define RAW_ACC_Z 19
+#define RAW_ANG_X 20
+#define RAW_ANG_Y 21
+#define RAW_ANG_Z 22
+#define RAW_TEMP 23
+#define RAW_COMPASS_X 24
+#define RAW_COMPASS_Y 25
+#define RAW_COMPASS_Z 26
+#define	LOG_2_ARRAY_MAX	27
 
 void parse_rmc(char*);
 void save_log_value(int, double, int);
 void* log_begin();
+double getTime();
+
+extern char filenames[3][100];
 
 #endif /* LOG_H_ */

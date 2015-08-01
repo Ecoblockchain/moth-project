@@ -6,18 +6,21 @@
 #include "log.h"
 #include "gps.h"
 #include "imu.h"
+#include "lidar.h"
 #include "switch.h"
 #include "sonar.h"
+#include "analog.h"
 
-#define MAX_THREADS 4
+#define MAX_THREADS 6
 
 pthread_t threads[MAX_THREADS];
+void *(*funcs[])(void *) = {gps_begin, sonar_begin, imu_begin, lidar_begin, analog_begin, log_begin};
 
 void startAll() {
-	pthread_create(&threads[0], NULL, gps_begin, NULL);
-	pthread_create(&threads[1], NULL, sonar_begin, NULL);
-	pthread_create(&threads[2], NULL, imu_begin, NULL);
-	pthread_create(&threads[3], NULL, log_begin, NULL);
+	int i;
+	for (i = 0; i < MAX_THREADS; i++) {
+		pthread_create(&threads[i], NULL, funcs[i], NULL);
+	}
 }
 
 void cancelAll() {
@@ -30,6 +33,7 @@ void cancelAll() {
 int main() {
 	int running = 0;
 	switch_init();
+	lidar_init();
 
 	while (1) {
 		if (switch_status() == 1) { // start/stop button

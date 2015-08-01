@@ -8,10 +8,10 @@ CFLAGS=-Wall
 LDLIBS=-pthread -lm -lrt
 FILE=moth
 
-_OBJ=main.o gps.o log.o sonar.o switch.o imu.o
+_OBJ=main.o gps.o log.o sonar.o switch.o imu.o analog.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
-_HEADERS=sonar.h log.h gps.h switch.h imu.h
+_HEADERS=sonar.h log.h gps.h switch.h imu.h analog.h
 HEADERS=$(patsubst %,src/%,$(_HEADERS))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(HEADERS)
@@ -32,4 +32,4 @@ install:
 	cp $(FILE) /bin/moth
 
 push:
-	rsync -rP --delete . root@192.168.7.2:~/moth-project
+	rsync -rP . root@192.168.7.2:~/moth-project

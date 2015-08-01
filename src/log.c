@@ -17,12 +17,13 @@
 
 pthread_mutex_t log_lock_1 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t log_lock_2 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t time_lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t* log_locks[] = {&log_lock_1, &log_lock_2};
 struct timespec start_time, current_time;
 
-FILE* fp[2];
-char filenames[2][100];
-double log_arrays[2][LOG_2_ARRAY_MAX];
+FILE* fp[3];
+char filenames[3][100];
+double log_arrays[3][LOG_2_ARRAY_MAX];
 int files_open = 0;
 int begun = 0;
 int log_array_max[] = {LOG_1_ARRAY_MAX, LOG_2_ARRAY_MAX};
@@ -43,7 +44,9 @@ double convert2(double number, char direction){
 }
 
 double getTime() {
-  clock_gettime(CLOCK_MONOTONIC, &current_time);
+  pthread_mutex_lock(&time_lock);
+    clock_gettime(CLOCK_MONOTONIC, &current_time);
+  pthread_mutex_unlock(&time_lock);
   return (current_time.tv_sec - start_time.tv_sec) + (current_time.tv_nsec - start_time.tv_nsec) / 1E9;
 }
 
@@ -71,15 +74,19 @@ void open_files(char *time, char *date){
   if (stat(folder, &st)) {
     mkdir(folder, 0700);
   }
-	sprintf(filenames[0],"%s/log_%s_1.txt", folder, timestamp);
-	sprintf(filenames[1],"%s/log_%s_2.txt", folder, timestamp);
+	sprintf(filenames[0],"%s/log_%s_1_10hz.txt", folder, timestamp);
+	sprintf(filenames[1],"%s/log_%s_2_100hz.txt", folder, timestamp);
+	sprintf(filenames[2],"%s/log_%s_3_lidar.txt", folder, timestamp);
 	fp[0]=fopen(filenames[0], "w");
 	fp[1]=fopen(filenames[1], "w");
+	fp[2]=fopen(filenames[2], "w");
 	files_open = 1;
 	fprintf(fp[0], "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
-fprintf(fp[1], "ROW\tTIME\tACC_X\tACC_Y\tACC_Z\tANG_X\tANG_Y\tANG_Z\tTEMP\tHEADING\tDIRECTION\tANALOG_0\tANALOG_1\tANALOG_2\tANALOG_3\tRAW_ACC_X\tRAW_ACC_Y\tRAW_ACC_Z\tRAW_ANG_X\tRAW_ANG_Y\tRAW_ANG_Z\tRAW_TEMP\tRAW_COMPASS_X\tRAW_COMPASS_Y\tRAW_COMPASS_Z\n");
+fprintf(fp[1], "ROW\tTIME\tACC_X\tACC_Y\tACC_Z\tANG_X\tANG_Y\tANG_Z\tTEMP\tHEADING\tDIRECTION\tANALOG_0\tANALOG_1\tANALOG_2\tANALOG_3\tANALOG_4\tANALOG_5\tANALOG_6\tRAW_ACC_X\tRAW_ACC_Y\tRAW_ACC_Z\tRAW_ANG_X\tRAW_ANG_Y\tRAW_ANG_Z\tRAW_TEMP\tRAW_COMPASS_X\tRAW_COMPASS_Y\tRAW_COMPASS_Z\n");
+fprintf(fp[2], "ROW\tTIME\tVALUES\n");
 	fclose(fp[0]);
 	fclose(fp[1]);
+	fclose(fp[2]);
 }
 
 void write_log_row(int log) {
