@@ -10,6 +10,7 @@
 urg_t lidar;
 long* length_data;
 int length_data_size;
+FILE* lidar_fp;
 
 const char* dev = "/dev/ttyACM0";
 const int baud = 115200;
@@ -29,7 +30,9 @@ void* lidar_begin() {
 	static int k = 1;
 
 	while (1) 	{
-		FILE* fp = fopen(filenames[2], "a");
+		if (files_open == 0) continue;
+
+		lidar_fp = fopen(filenames[2], "a");
 
 		if (urg_start_measurement(&lidar, URG_DISTANCE, 1, 0) < 0) {
 			printf("ERROR: unable to start measurement on LIDAR\n");
@@ -40,13 +43,13 @@ void* lidar_begin() {
 			printf("ERROR: unable to get distance data from LIDAR\n");
 		}
 
-		fprintf(fp, "%i\t%0.2f", k, getTime());
+		fprintf(lidar_fp, "%i\t%0.2f", k, getTime());
 		int i;
 		for (i = 0; i < length_data_size; i++) {
-			fprintf(fp, "\t%ld", length_data[i]);
+			fprintf(lidar_fp, "\t%ld", length_data[i]);
 		}
-		fprintf(fp, "\n");
+		fprintf(lidar_fp, "\n");
 
-		fclose(fp);
+		fclose(lidar_fp);
 	}
 }

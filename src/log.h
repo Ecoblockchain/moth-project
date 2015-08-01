@@ -47,6 +47,7 @@ void save_log_value(int, double, int);
 void* log_begin();
 double getTime();
 
-extern char filenames[3][100];
+extern char filenames[3][130];
+extern int files_open;
 
 #endif /* LOG_H_ */

@@ -13,7 +13,8 @@ int analog_read(int num) {
   char analog_dev[50];
   char buf[4];
 
-  sprintf(analog_dev, "/sys/devices/ocp.3/helper.12/AIN%i", num);
+sprintf(analog_dev, "/sys/bus/iio/devices/iio:device0/in_voltage%i_raw", num);
+  //sprintf(analog_dev, "/sys/devices/ocp.3/helper.12/AIN%i", num);
   analog_fd = open(analog_dev, O_RDONLY);
   if (analog_fd < 0) {
     printf("ERROR: couldn't open analog device\n");

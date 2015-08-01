@@ -35,10 +35,9 @@ int main() {
 
 		int i;
 		for (i = 0; i < length_data_size - 1; i++) {
-		//		printf("%ld\t", length_data[i]);
+				printf("%ld\t", length_data[i]);
 		}
-		//printf("%ld\n", length_data[length_data_size]);
-		printf("%i\n", length_data_size);
+		printf("%ld\n", length_data[length_data_size]);
 
 		usleep(10000);
 	}

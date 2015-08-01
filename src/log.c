@@ -22,7 +22,7 @@ pthread_mutex_t* log_locks[] = {&log_lock_1, &log_lock_2};
 struct timespec start_time, current_time;
 
 FILE* fp[3];
-char filenames[3][100];
+char filenames[3][130];
 double log_arrays[3][LOG_2_ARRAY_MAX];
 int files_open = 0;
 int begun = 0;
@@ -62,7 +62,7 @@ void open_files(char *time, char *date){
 	if (files_open == 1) return;
 	char timestamp[15];
 	sprintf(timestamp,"20%c%c%c%c%c%c%c%c%c%c.0",date[4],date[5],date[2],date[3],date[0],date[1],time[0],time[1],time[2],time[3]);
-	printf("ST Log File Opened  /root/log/log_%s\n",timestamp);
+	printf("STATUS: Log File Opened  /root/log/log_%s\n",timestamp);
 	char sys[25];
 	strcpy(sys,"date ");
 	strcat(sys,timestamp);

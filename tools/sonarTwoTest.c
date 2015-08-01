@@ -4,11 +4,8 @@
 #include <unistd.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "sonar.h"
-#include "log.h"
 
 const uint8_t sonar_address[] = {0x04, 0x06, 0x08, 0x0a};
-const int sonar_array_index[] = {SONAR_1, SONAR_2, SONAR_3, SONAR_4};
 const char* sonar_i2c_dev = "/dev/i2c-2";
 volatile int sonar_fd;
 const uint8_t sonar_ping = 0x51;
@@ -34,14 +31,6 @@ int pingSonar(int num) {
   return 0;
 }
 
-int sonar_pingall() {
-  int sum = 0, i;
-  for (i = 0; i < 4; i++) {
-    sum += pingSonar(i);
-  }
-  return sum;
-}
-
 int getSonarDistance(int num) {
   if (num > 1) return 0; // TEMPORARY
   int value;
@@ -55,25 +44,25 @@ int getSonarDistance(int num) {
     return -1;
   }
   value =  (buf[0] << 8) | buf[1];
-  save_log_value(sonar_array_index[num], value, 0);
+  printf("%i\t", value);
+  if (num == 1) printf("\n");
   return value;
-}
-
-int sonar_updateAll() {
-  int sum = 0, i;
-  for (i = 0; i < 4; i++) {
-    sum += getSonarDistance(i);
-  }
-  return sum;
 }
 
 void* sonar_begin() {
 	initSonar();
-  sonar_pingall();
+	pingSonar(0);
+	pingSonar(1);
 	while (1) {
-		usleep(80000);
-    sonar_updateAll();
+    usleep(80000);
+		getSonarDistance(0);
+		getSonarDistance(1);
 		usleep(20000);
-    sonar_pingall();
+		pingSonar(0);
+		pingSonar(1);
 	}
+}
+
+int main() {
+  sonar_begin();
 }

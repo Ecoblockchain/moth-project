@@ -4,14 +4,14 @@ SDIR=src
 ODIR=$(SDIR)/obj
 CC=gcc
 RM=rm -rf
-CFLAGS=-Wall
-LDLIBS=-pthread -lm -lrt
+CFLAGS=-Wall -pg
+LDLIBS=-pthread -lm -lrt -lurg_c -pg
 FILE=moth
 
-_OBJ=main.o gps.o log.o sonar.o switch.o imu.o analog.o
+_OBJ=main.o gps.o log.o sonar.o switch.o imu.o analog.o lidar.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
-_HEADERS=sonar.h log.h gps.h switch.h imu.h analog.h
+_HEADERS=sonar.h log.h gps.h switch.h imu.h analog.h lidar.h
 HEADERS=$(patsubst %,src/%,$(_HEADERS))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(HEADERS)
@@ -32,4 +32,4 @@ install:
 	cp $(FILE) /bin/moth
 
 push:
-	rsync -rP . root@192.168.7.2:~/moth-project
+	rsync -aP . root@192.168.7.2:~/moth-project
