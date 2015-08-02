@@ -9,63 +9,23 @@
 #include "log.h"
 #include "imu.h"
 
-//address and id
-#define ADXL345_I2C_ADDR 0x53
-#define ADXL345_POWER_CTL 0x2D
-#define ADXL345_POWER_ON 0x08
-#define ADXL345_DATA_FORMAT 0x31
-#define ADXL345_16G 0x03
-#define ADXL345_FULL_RES 0x08
-#define ADXL345_XOUT_L 0x32
-
-#define ITG3200_I2C_ADDR 0x68
-#define ITG3200_PWR_MGM 0x3E
-#define ITG3200_RESET 0x80
-#define ITG3200_TEMP_H 0x1B
-
-#define HMC5883L_I2C_ADDR 0x1E
-#define HMC5883L_CONF_REG_B 0x01
-#define GA_1_3_REG 0x01 << 5
-#define HMC5883L_MODE_REG 0x02
-#define HMC5883L_CONT_MODE 0x00
-#define HMC5883L_DATA_REG 0x03
-#define HMC5883L_X_MSB_REG 0
-#define HMC5883L_X_LSB_REG 1
-#define HMC5883L_Z_MSB_REG 2
-#define HMC5883L_Z_LSB_REG 3
-#define HMC5883L_Y_MSB_REG 4
-#define HMC5883L_Y_LSB_REG 5
-#define SCALE_0_92_MG 0.92
-
-
 uint8_t acc_buffer[6];
-float acc_offsets[6];
-float acc_accel[6];
-int16_t acc_rawaccel[6];
+float acc_offsets[3];
+float acc_accel[3];
+int16_t acc_rawaccel[3];
 
 uint8_t gyro_buffer[8];
-int16_t gyro_rotation[6];
-int gyro_offsets[6];
-float gyro_angle[6];
+int16_t gyro_rotation[3];
+int gyro_offsets[3];
+float gyro_angle[3];
 int gyro_temperature;
 
 uint8_t mag_rx_tx_buf[6];
 int16_t mag_coor[3];
 float mag_declination;
 
-
-
 volatile int imu_fd;
 const char* imu_i2c_dev = "/dev/i2c-1";
-
-int imu_init() {
-  imu_fd = open(imu_i2c_dev, O_RDWR);
-  if (imu_fd < 0) {
-    printf("ERROR: couldn't open i2c imu\n");
-    return -1;
-  }
-  return 0;
-}
 
 float* acc_getAcceleration() {
   int i;
@@ -125,13 +85,14 @@ int acc_update() {
   // z
   acc_rawaccel[2] = ((buf[5] << 8 ) | buf[4]);
 
-  save_log_value(RAW_ACC_X, acc_rawaccel[0], 1);
-  save_log_value(RAW_ACC_Y, acc_rawaccel[1], 1);
-  save_log_value(RAW_ACC_Z, acc_rawaccel[2], 1);
   float* acc = acc_getAcceleration();
   save_log_value(ACC_X, acc[0], 1);
   save_log_value(ACC_Y, acc[1], 1);
   save_log_value(ACC_Z, acc[2], 1);
+  int i;
+  for (i = 0; i < 3; i++) {
+    acc_accel[i] = acc_rawaccel[i] * acc_offsets[i];
+  }
 
   return 0;
 }
@@ -351,16 +312,15 @@ int mag_init() {
   return 0;
 }
 
-void* imu_begin() {
-  imu_init();
-  acc_init();
-  gyro_init();
-  mag_init();
-
-  while (1) {
-    acc_update();
-    gyro_update();
-    mag_update();
-    usleep(10000);
+int imu_init() {
+  imu_fd = open(imu_i2c_dev, O_RDWR);
+  if (imu_fd < 0) {
+    printf("ERROR: couldn't open i2c imu\n");
+    return -1;
   }
+  return acc_init() + gyro_init() + mag_init();
+}
+
+int imu_update() {
+  return acc_update() + gyro_update() + mag_update();
 }

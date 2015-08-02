@@ -103,7 +103,6 @@ void* gps_begin() {
 	char aa;
 	char local_buffer[500];
 	int idx = 0;
-	gps_init();
 	tcflush(gps_fd, TCIFLUSH);
 	int read_more = 0;
 

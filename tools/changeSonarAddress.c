@@ -1,33 +1,25 @@
-#include <mraa/i2c.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <stdio.h>
 
 int main() {
-	uint8_t oldAddress = 0x02;
-	uint8_t newAddress = 0x06;
+	uint8_t oldAddress = 0x70;
+	uint8_t newAddress = 0x0a;
 	newAddress = newAddress << 1;
 
-	mraa_i2c_context i2c;
-	uint8_t buf[2];
-	i2c = mraa_i2c_init(1);
-
-	mraa_i2c_address(i2c, oldAddress);
-	mraa_i2c_write_byte(i2c, 0x51);
-	usleep(80000);
-	mraa_i2c_read(i2c, buf, 2);
-	int value = (buf[0] << 8) | buf[1];
-	printf("before: %i,\t", value);
-
-	usleep(20000);
+	const char* sonar_i2c_dev = "/dev/i2c-2";
+	volatile int sonar_fd;
 	uint8_t writebuf[] = {0xaa, 0xa5, newAddress};
-	mraa_i2c_write(i2c, writebuf, 3);
 
-	mraa_i2c_address(i2c, newAddress);
-	mraa_i2c_write_byte(i2c, 81);
-	usleep(80000);
-	mraa_i2c_read(i2c, buf, 2);
-	value = (buf[0] << 8) | buf[1];
-	printf("after: %i\n", value);
+	sonar_fd = open(sonar_i2c_dev, O_RDWR);
+	ioctl(sonar_fd, I2C_SLAVE, oldAddress);
+	write(sonar_fd, writebuf, 3);
 
+	close(sonar_fd);
 	return 0;
 }

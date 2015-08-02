@@ -44,10 +44,11 @@
 
 void parse_rmc(char*);
 void save_log_value(int, double, int);
-void* log_begin();
-double getTime();
+void write_log_2_row();
+double getTimeOffset();
 
 extern char filenames[3][130];
 extern int files_open;
+extern int keep_going;
 
 #endif /* LOG_H_ */

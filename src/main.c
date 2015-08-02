@@ -8,46 +8,32 @@
 #include "imu.h"
 #include "lidar.h"
 #include "switch.h"
-#include "sonar.h"
+#include "ultra.h"
 #include "analog.h"
 
-#define MAX_THREADS 6
-
-pthread_t threads[MAX_THREADS];
-void *(*funcs[])(void *) = {gps_begin, sonar_begin, imu_begin, lidar_begin, analog_begin, log_begin};
-
-void startAll() {
-	int i;
-	for (i = 0; i < MAX_THREADS; i++) {
-		pthread_create(&threads[i], NULL, funcs[i], NULL);
-	}
-}
-
-void cancelAll() {
-	int i;
-	for (i = 0; i < MAX_THREADS; i++) {
-		pthread_cancel(threads[i]);
-	}
-}
+pthread_t gps_thread, lidar_thread;
 
 int main() {
-	int running = 0;
 	switch_init();
 	lidar_init();
+	gps_init();
+	imu_init();
+	ultra_init();
 
 	while (1) {
-		if (switch_status() == 1) { // start/stop button
-			if (!running) {
-				startAll();
-				running = 1;
+		if (switch_status() == 1) {
+			pthread_create(&gps_thread, NULL, gps_begin, NULL);
+			pthread_create(&lidar_thread, NULL, lidar_begin, NULL);
+
+			while (switch_status() == 1) {
+				imu_update();
+				write_log_2_row();
+				usleep(10000);
 			}
-		} else {
-			if (running) {
-				cancelAll();
-				running = 0;
-			}
+
+			pthread_cancel(gps_thread);
 		}
-		usleep(50000);
+
+		usleep(200000);
 	}
-	return 0;
 }

@@ -14,6 +14,9 @@
 #include <unistd.h>
 #include <ctype.h>
 #include "log.h"
+#include "ultra.h"
+#include "analog.h"
+#include "imu.h"
 
 pthread_mutex_t log_lock_1 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t log_lock_2 = PTHREAD_MUTEX_INITIALIZER;
@@ -25,7 +28,6 @@ FILE* fp[3];
 char filenames[3][130];
 double log_arrays[3][LOG_2_ARRAY_MAX];
 int files_open = 0;
-int begun = 0;
 int log_array_max[] = {LOG_1_ARRAY_MAX, LOG_2_ARRAY_MAX};
 char mark[20] = "";
 
@@ -43,7 +45,7 @@ double convert2(double number, char direction){
   return number;
 }
 
-double getTime() {
+double getTimeOffset() {
   pthread_mutex_lock(&time_lock);
     clock_gettime(CLOCK_MONOTONIC, &current_time);
   pthread_mutex_unlock(&time_lock);
@@ -89,28 +91,34 @@ fprintf(fp[2], "ROW\tTIME\tVALUES\n");
 	fclose(fp[2]);
 }
 
-void write_log_row(int log) {
-	fp[log] = fopen(filenames[log], "a");
-  if (begun == 0) {
-	  clock_gettime(CLOCK_MONOTONIC, &start_time);
-    begun = 1;
-  }
-	static int j[] = {1, 1};
+void write_log_1_row() {
+	fp[0] = fopen(filenames[0], "a");
+	static int j = 1;
+  if (j == 1) clock_gettime(CLOCK_MONOTONIC, &start_time);
 	int i = 0;
-	fprintf(fp[log],"%d\t",j[log]++);
-	pthread_mutex_lock(log_locks[log]);
-		for (i = 0 ; i < log_array_max[log] ; i++){
-      if (log == 0 && (i == LATITUDE || i == LONGITUDE)) {
-			  fprintf(fp[log],"%0.6f\t",log_arrays[log][i]);
-      } else if (log == 1 && i == TIME_2) {
-        fprintf(fp[log], "%0.2f\t", getTime());
+	fprintf(fp[0],"%d\t",j++);
+	pthread_mutex_lock(log_locks[0]);
+		for (i = 0 ; i < log_array_max[0] ; i++){
+      if (i == LATITUDE || i == LONGITUDE) {
+			  fprintf(fp[0],"%0.6f\t",log_arrays[0][i]);
+      } else if (i >= SONAR_1 && i <= SONAR_4) {
+        fprintf(fp[0], "%d\t", ultra_getDistance(i - SONAR_1));
       } else {
-			  fprintf(fp[log],"%0.2f\t",log_arrays[log][i]);
+			  fprintf(fp[0],"%0.2f\t",log_arrays[0][i]);
       }
 		}
-		fprintf(fp[log],"\n");
-	pthread_mutex_unlock(log_locks[log]);
-	fclose(fp[log]);
+		fprintf(fp[0],"\n");
+	pthread_mutex_unlock(log_locks[0]);
+	fclose(fp[0]);
+  ultra_pingAll();
+}
+
+void write_log_2_row() {
+  if (files_open == 0) return;
+	fp[1] = fopen(filenames[1], "a");
+	static int h = 1;
+	fprintf(fp[1],"%d\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", h++, getTimeOffset(), acc_accel[0], acc_accel[1], acc_accel[2], gyro_angle[0], gyro_angle[1], gyro_angle[2], gyro_getTemperature(), mag_heading(), mag_direction(), analog_read(0),analog_read(1),analog_read(2),analog_read(3),analog_read(4),analog_read(5),analog_read(6), acc_rawaccel[0], acc_rawaccel[1], acc_rawaccel[2], gyro_rotation[0], gyro_rotation[1], gyro_rotation[2], gyro_getRawTemp(), mag_coor[0], mag_coor[1], mag_coor[2]);
+	fclose(fp[1]);
 }
 
 int str_split(char **array, char *buf, char *sep, int max){
@@ -147,29 +155,16 @@ int str_split(char **array, char *buf, char *sep, int max){
 
 void parse_rmc(char *buffer){
 	char local_buffer[100];
-    strcpy(local_buffer, buffer);
-    char *array[50];
-    char sep[] = "*,";
-    str_split(array, local_buffer+3, sep, 50);
-	pthread_mutex_lock(log_locks[0]);
-		log_arrays[0][TIME_1] = atof(array[1]);
-		log_arrays[0][DATE] = atof(array[9]);
-		log_arrays[0][LATITUDE] = convert(atof(array[3]),array[4][0]);
-		log_arrays[0][LONGITUDE] = convert(atof(array[5]),array[6][0]);
-		log_arrays[0][COG] = atof(array[8]);
-		log_arrays[0][SOG] = atof(array[7]);
-	pthread_mutex_unlock(log_locks[0]);
+  strcpy(local_buffer, buffer);
+  char *array[50];
+  char sep[] = "*,";
+  str_split(array, local_buffer+3, sep, 50);
+	log_arrays[0][TIME_1] = atof(array[1]);
+	log_arrays[0][DATE] = atof(array[9]);
+	log_arrays[0][LATITUDE] = convert(atof(array[3]),array[4][0]);
+	log_arrays[0][LONGITUDE] = convert(atof(array[5]),array[6][0]);
+	log_arrays[0][COG] = atof(array[8]);
+	log_arrays[0][SOG] = atof(array[7]);
 	if (files_open == 0) open_files(array[1],array[9]);
-}
-
-void* log_begin() {
-  int i;
-  while (files_open == 0);
-  while (1) {
-    write_log_row(0);
-    for (i = 0; i < 10; i++) {
-      write_log_row(1);
-      usleep(10000);
-    }
-  }
+  write_log_1_row();
 }

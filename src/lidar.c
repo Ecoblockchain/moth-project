@@ -43,7 +43,7 @@ void* lidar_begin() {
 			printf("ERROR: unable to get distance data from LIDAR\n");
 		}
 
-		fprintf(lidar_fp, "%i\t%0.2f", k, getTime());
+		fprintf(lidar_fp, "%i\t%0.2f", k, getTimeOffset());
 		int i;
 		for (i = 0; i < length_data_size; i++) {
 			fprintf(lidar_fp, "\t%ld", length_data[i]);

@@ -19,7 +19,6 @@ void initSonar() {
 }
 
 int pingSonar(int num) {
-  if (num > 1) return 0; // TEMPORARY
   if (ioctl(sonar_fd, I2C_SLAVE, sonar_address[num]) < 0) {
     printf("ERROR: couldn't set sonar address\n");
     return -1;
@@ -32,7 +31,6 @@ int pingSonar(int num) {
 }
 
 int getSonarDistance(int num) {
-  if (num > 1) return 0; // TEMPORARY
   int value;
   uint8_t buf[2];
   if (ioctl(sonar_fd, I2C_SLAVE, sonar_address[num]) < 0) {
@@ -53,13 +51,19 @@ void* sonar_begin() {
 	initSonar();
 	pingSonar(0);
 	pingSonar(1);
+	pingSonar(2);
+	pingSonar(3);
 	while (1) {
     usleep(80000);
 		getSonarDistance(0);
 		getSonarDistance(1);
+		getSonarDistance(2);
+		getSonarDistance(3);
 		usleep(20000);
 		pingSonar(0);
 		pingSonar(1);
+		pingSonar(2);
+		pingSonar(3);
 	}
 }
 
