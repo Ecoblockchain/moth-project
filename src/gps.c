@@ -31,15 +31,15 @@ int verify_nmea(char *string){
 		return -1;
 	int length = strlen(string);
 	if (length > 90) {
-		printf("ER string  %s too long\n",string);
+		printf("ERROR: string  %s too long\n",string);
 		return -1;
 	}
 	if (string[length-1]!= '\n') {
-		printf("ER no newline\n");
+		printf("ERROR: no newline\n");
 		return -1;
 	}
 	if (string[length-2] != '\r') {
-		printf("ER no return\n");
+		printf("ERROR: no return\n");
 		return -1;
 	}
 	int p = 1; // start after the $, stop before the *
@@ -94,6 +94,7 @@ int gps_init() {
 	// tell gps to only send the RMC at 10hz
 	write(gps_fd, dataSetting, strlen(dataSetting));
 	write(gps_fd, freqSetting, strlen(freqSetting));
+	printf("STATUS: initialized gps\n");
 	return 0;
 }
 
@@ -129,13 +130,13 @@ void* gps_begin() {
 			local_buffer[idx] = '\n';
 			local_buffer[idx + 1] = '\0';
 			idx = 0;
-			if(verify_nmea(local_buffer) == 0) {
-				if (strstr(local_buffer,",,,,,") && strstr(local_buffer, "RMC")){
+			if (verify_nmea(local_buffer) == 0) {
+				if (strstr(local_buffer,",,,,,") && strstr(local_buffer, "RMC")) {
 					printf("STATUS: GPS Not Ready %s\n",local_buffer);
-				} else if (strstr(local_buffer, "RMC")) {
-					// GPS Sentence
-					printf("GPS: %s", local_buffer);
+				}
+				if (strstr(local_buffer, "RMC")) {
 					parse_rmc(local_buffer);
+					printf("GPS: %s", local_buffer);
 				}
 			}
 		}

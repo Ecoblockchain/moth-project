@@ -14,17 +14,16 @@ volatile int ultra_fd;
 const uint8_t ultra_ping_code = 0x51;
 
 int ultra_init() {
-  printf("WARNING: ignoring ultras 3 and 4\n");
   ultra_fd = open(ultra_i2c_dev, O_RDWR);
   if (ultra_fd < 0) {
     printf("ERROR: couldn't open i2c ultra\n");
     return -1;
   }
+  printf("STATUS: initialized ultrasonic\n");
   return 0;
 }
 
 int ultra_ping(int num) {
-  if (num != 2) return 0; // TEMPORARY
   if (ioctl(ultra_fd, I2C_SLAVE, ultra_address[num]) < 0) {
     printf("ERROR: couldn't set ultra address\n");
     return -1;
@@ -45,7 +44,6 @@ int ultra_pingAll() {
 }
 
 int ultra_getDistance(int num) {
-  if (num != 2) return 0; // TEMPORARY
   int value;
   uint8_t buf[2];
   if (ioctl(ultra_fd, I2C_SLAVE, ultra_address[num]) < 0) {

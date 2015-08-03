@@ -4,14 +4,14 @@ SDIR=src
 ODIR=$(SDIR)/obj
 CC=gcc
 RM=rm -rf
-CFLAGS=-Wall -pg
-LDLIBS=-pthread -lm -lrt -lurg_c -pg
+CFLAGS=-Wall
+LDLIBS=-pthread -lm -lrt -lurg_c
 FILE=moth
 
-_OBJ=main.o gps.o log.o sonar.o switch.o imu.o analog.o lidar.o
+_OBJ=main.o gps.o log.o ultra.o switch.o imu.o analog.o lidar.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
-_HEADERS=sonar.h log.h gps.h switch.h imu.h analog.h lidar.h
+_HEADERS=ultra.h log.h gps.h switch.h imu.h analog.h lidar.h
 HEADERS=$(patsubst %,src/%,$(_HEADERS))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(HEADERS)

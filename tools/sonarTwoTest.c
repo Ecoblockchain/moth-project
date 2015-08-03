@@ -49,21 +49,15 @@ int getSonarDistance(int num) {
 
 void* sonar_begin() {
 	initSonar();
-	pingSonar(0);
-	pingSonar(1);
-	pingSonar(2);
-	pingSonar(3);
 	while (1) {
-    usleep(80000);
-		getSonarDistance(0);
-		getSonarDistance(1);
-		getSonarDistance(2);
-		getSonarDistance(3);
-		usleep(20000);
 		pingSonar(0);
+    usleep(40000);
 		pingSonar(1);
-		pingSonar(2);
-		pingSonar(3);
+    usleep(40000);
+		getSonarDistance(0);
+    usleep(40000);
+		getSonarDistance(1);
+    usleep(40000);
 	}
 }
 

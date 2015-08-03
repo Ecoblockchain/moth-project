@@ -9,11 +9,17 @@ int ret;
 long* length_data;
 int length_data_size;
 
-const char* dev = "/dev/ttyACM0";
+char dev[20];
 const int baud = 115200;
 char howlong[10000];
 
-int main() {
+int main(int argc, char* argv[]) {
+	sprintf(dev, "/dev/ttyACM0");
+	if (argc > 1) {
+		printf("you put %c\n", argv[1][0]);
+		sprintf(dev, "/dev/ttyACM%c", argv[1][0]);
+		printf("trying to open device on %s\n", dev);
+	}
 	if (urg_open(&lidar, URG_SERIAL, dev, baud) < 0) {
 		printf("ERROR: unable to open LIDAR\n");
 		return 1;

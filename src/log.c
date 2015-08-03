@@ -18,17 +18,13 @@
 #include "analog.h"
 #include "imu.h"
 
-pthread_mutex_t log_lock_1 = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t log_lock_2 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t time_lock = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t* log_locks[] = {&log_lock_1, &log_lock_2};
 struct timespec start_time, current_time;
 
 FILE* fp[3];
 char filenames[3][130];
-double log_arrays[3][LOG_2_ARRAY_MAX];
+double log_array[LOG_1_ARRAY_MAX];
 int files_open = 0;
-int log_array_max[] = {LOG_1_ARRAY_MAX, LOG_2_ARRAY_MAX};
 char mark[20] = "";
 
 double convert(double number, char direction){
@@ -52,30 +48,15 @@ double getTimeOffset() {
   return (current_time.tv_sec - start_time.tv_sec) + (current_time.tv_nsec - start_time.tv_nsec) / 1E9;
 }
 
-
-void save_log_value(int index, double data, int log) {
-	if(index < 0 || index >= log_array_max[log]) return;
-	pthread_mutex_lock(log_locks[log]);
-		log_arrays[log][index] = data;
-	pthread_mutex_unlock(log_locks[log]);
-}
-
 void open_files(char *time, char *date){
 	if (files_open == 1) return;
 	char timestamp[15];
-	sprintf(timestamp,"20%c%c%c%c%c%c%c%c%c%c.0",date[4],date[5],date[2],date[3],date[0],date[1],time[0],time[1],time[2],time[3]);
+	sprintf(timestamp,"20%c%c%c%c%c%c%c%c%c%c",date[4],date[5],date[2],date[3],date[0],date[1],time[0],time[1],time[2],time[3]);
 	printf("STATUS: Log File Opened  /root/log/log_%s\n",timestamp);
-	char sys[25];
-	strcpy(sys,"date ");
-	strcat(sys,timestamp);
-	system(sys);
-	timestamp[12] = '\0';
   struct stat st = {0};
   char folder[35];
   sprintf(folder, "/root/log/log_%s", timestamp);
-  if (stat(folder, &st)) {
-    mkdir(folder, 0700);
-  }
+  if (stat(folder, &st)) mkdir(folder, 0700);
 	sprintf(filenames[0],"%s/log_%s_1_10hz.txt", folder, timestamp);
 	sprintf(filenames[1],"%s/log_%s_2_100hz.txt", folder, timestamp);
 	sprintf(filenames[2],"%s/log_%s_3_lidar.txt", folder, timestamp);
@@ -84,7 +65,7 @@ void open_files(char *time, char *date){
 	fp[2]=fopen(filenames[2], "w");
 	files_open = 1;
 	fprintf(fp[0], "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
-fprintf(fp[1], "ROW\tTIME\tACC_X\tACC_Y\tACC_Z\tANG_X\tANG_Y\tANG_Z\tTEMP\tHEADING\tDIRECTION\tANALOG_0\tANALOG_1\tANALOG_2\tANALOG_3\tANALOG_4\tANALOG_5\tANALOG_6\tRAW_ACC_X\tRAW_ACC_Y\tRAW_ACC_Z\tRAW_ANG_X\tRAW_ANG_Y\tRAW_ANG_Z\tRAW_TEMP\tRAW_COMPASS_X\tRAW_COMPASS_Y\tRAW_COMPASS_Z\n");
+fprintf(fp[1], "ROW\tTIME\tACC_X\tACC_Y\tACC_Z\tHEADING\tDIRECTION\tANALOG_0\tANALOG_1\tANALOG_2\tANALOG_3\tANALOG_4\tRAW_ACC_X\tRAW_ACC_Y\tRAW_ACC_Z\tRAW_COMPASS_X\tRAW_COMPASS_Y\tRAW_COMPASS_Z\n");
 fprintf(fp[2], "ROW\tTIME\tVALUES\n");
 	fclose(fp[0]);
 	fclose(fp[1]);
@@ -97,27 +78,29 @@ void write_log_1_row() {
   if (j == 1) clock_gettime(CLOCK_MONOTONIC, &start_time);
 	int i = 0;
 	fprintf(fp[0],"%d\t",j++);
-	pthread_mutex_lock(log_locks[0]);
-		for (i = 0 ; i < log_array_max[0] ; i++){
-      if (i == LATITUDE || i == LONGITUDE) {
-			  fprintf(fp[0],"%0.6f\t",log_arrays[0][i]);
-      } else if (i >= SONAR_1 && i <= SONAR_4) {
-        fprintf(fp[0], "%d\t", ultra_getDistance(i - SONAR_1));
-      } else {
-			  fprintf(fp[0],"%0.2f\t",log_arrays[0][i]);
-      }
-		}
-		fprintf(fp[0],"\n");
-	pthread_mutex_unlock(log_locks[0]);
+	for (i = 0 ; i < LOG_1_ARRAY_MAX; i++){
+    if (i == LATITUDE || i == LONGITUDE) {
+		  fprintf(fp[0],"%0.6f\t",log_array[i]);
+    } else if (i >= SONAR_1 && i <= SONAR_4) {
+      fprintf(fp[0], "%d\t", ultra_getDistance(i - SONAR_1));
+    } else {
+		  fprintf(fp[0],"%0.2f\t",log_array[i]);
+    }
+	}
+	fprintf(fp[0],"\n");
 	fclose(fp[0]);
   ultra_pingAll();
 }
 
-void write_log_2_row() {
+void write_log_2_row(char* analog_buffer) {
   if (files_open == 0) return;
 	fp[1] = fopen(filenames[1], "a");
 	static int h = 1;
-	fprintf(fp[1],"%d\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", h++, getTimeOffset(), acc_accel[0], acc_accel[1], acc_accel[2], gyro_angle[0], gyro_angle[1], gyro_angle[2], gyro_getTemperature(), mag_heading(), mag_direction(), analog_read(0),analog_read(1),analog_read(2),analog_read(3),analog_read(4),analog_read(5),analog_read(6), acc_rawaccel[0], acc_rawaccel[1], acc_rawaccel[2], gyro_rotation[0], gyro_rotation[1], gyro_rotation[2], gyro_getRawTemp(), mag_coor[0], mag_coor[1], mag_coor[2]);
+	if (fprintf(fp[1],"%d\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\n", h++, getTimeOffset(), acc_accel[0], acc_accel[1], acc_accel[2],  mag_heading(), mag_direction(), analog_read(0), analog_buffer, acc_rawaccel[0], acc_rawaccel[1], acc_rawaccel[2], mag_coor[0], mag_coor[1], mag_coor[2]) < 0) {
+    printf("ERROR: couldn't write to log 2\n");
+	  fclose(fp[1]);
+    return;
+  }
 	fclose(fp[1]);
 }
 
@@ -159,12 +142,12 @@ void parse_rmc(char *buffer){
   char *array[50];
   char sep[] = "*,";
   str_split(array, local_buffer+3, sep, 50);
-	log_arrays[0][TIME_1] = atof(array[1]);
-	log_arrays[0][DATE] = atof(array[9]);
-	log_arrays[0][LATITUDE] = convert(atof(array[3]),array[4][0]);
-	log_arrays[0][LONGITUDE] = convert(atof(array[5]),array[6][0]);
-	log_arrays[0][COG] = atof(array[8]);
-	log_arrays[0][SOG] = atof(array[7]);
+	log_array[TIME_1] = atof(array[1]);
+	log_array[DATE] = atof(array[9]);
+	log_array[LATITUDE] = convert(atof(array[3]),array[4][0]);
+	log_array[LONGITUDE] = convert(atof(array[5]),array[6][0]);
+	log_array[COG] = atof(array[8]);
+	log_array[SOG] = atof(array[7]);
 	if (files_open == 0) open_files(array[1],array[9]);
   write_log_1_row();
 }
