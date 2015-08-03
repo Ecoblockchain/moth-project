@@ -77,7 +77,7 @@ int gps_init() {
 	}
 	struct termios tio;
 
-	// set Edison UART to 9600 baud
+	// set machine UART to 9600 baud
 	tcgetattr(gps_fd, &tio);
 	cfsetspeed(&tio, B9600);
 	cfmakeraw(&tio);
@@ -85,15 +85,20 @@ int gps_init() {
 	// set gps to 115200 baud if it wasn't already
 	write(gps_fd, baudSetting, strlen(baudSetting));
 
-	// set Edison UART to 115200 baud
+	// set machine UART to 115200 baud
 	tcgetattr(gps_fd, &tio);
 	cfsetspeed(&tio, B115200);
 	cfmakeraw(&tio);
 	tcsetattr(gps_fd, TCSADRAIN, &tio);
 
-	// tell gps to only send the RMC at 10hz
+	// tell gps to send the RMC only, and at 10hz
 	write(gps_fd, dataSetting, strlen(dataSetting));
 	write(gps_fd, freqSetting, strlen(freqSetting));
+	usleep(500000);
+	// do it again; it didn't work a few times.
+	write(gps_fd, dataSetting, strlen(dataSetting));
+	write(gps_fd, freqSetting, strlen(freqSetting));
+
 	printf("STATUS: initialized gps\n");
 	return 0;
 }
@@ -101,15 +106,16 @@ int gps_init() {
 // read from the gps forever
 void* gps_begin() {
 	printf("STATUS: GPS read is running\n");
+	gps_init();
 	char aa;
 	char local_buffer[500];
 	int idx = 0;
 	tcflush(gps_fd, TCIFLUSH);
-	int read_more = 0;
+	int gps_read_more = 0;
 
 	while (1) {
-		while (read(gps_fd, &aa, 1) == -1 || (aa != '$' && read_more != 1));   // read 1 character from stream (blocking call)
-		read_more = 1;
+		while (read(gps_fd, &aa, 1) == -1 || (aa != '$' && gps_read_more != 1));   // read 1 character from stream (blocking call)
+		gps_read_more = 1;
 		if (aa != '\n') {
 			local_buffer[idx++] = aa;
 			if (idx > 400) {
@@ -126,14 +132,11 @@ void* gps_begin() {
 			}
 		} else {
 			// at end of sentence
-			read_more = 0;
+			gps_read_more = 0;
 			local_buffer[idx] = '\n';
 			local_buffer[idx + 1] = '\0';
 			idx = 0;
 			if (verify_nmea(local_buffer) == 0) {
-				if (strstr(local_buffer,",,,,,") && strstr(local_buffer, "RMC")) {
-					printf("STATUS: GPS Not Ready %s\n",local_buffer);
-				}
 				if (strstr(local_buffer, "RMC")) {
 					parse_rmc(local_buffer);
 					printf("GPS: %s", local_buffer);

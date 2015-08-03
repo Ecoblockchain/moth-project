@@ -18,7 +18,7 @@ void save_log_value(int, double, int);
 void write_log_2_row(char* analog_buffer);
 double getTimeOffset();
 
-extern char filenames[3][130];
+extern char filenames[2][130];
 extern int files_open;
 extern int keep_going;
 

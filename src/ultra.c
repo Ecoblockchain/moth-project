@@ -8,7 +8,6 @@
 #include "log.h"
 
 const uint8_t ultra_address[] = {0x04, 0x06, 0x08, 0x0a};
-const int ultra_array_index[] = {SONAR_1, SONAR_2, SONAR_3, SONAR_4};
 const char* ultra_i2c_dev = "/dev/i2c-2";
 volatile int ultra_fd;
 const uint8_t ultra_ping_code = 0x51;
@@ -35,16 +34,14 @@ int ultra_ping(int num) {
   return 0;
 }
 
-int ultra_pingAll() {
-  int sum = 0, i;
-  for (i = 0; i < 4; i++) {
-    sum += ultra_ping(i);
-  }
-  return sum;
+void ultra_pingAll() {
+  ultra_ping(0);
+  ultra_ping(1);
+  ultra_ping(2);
+  ultra_ping(3);
 }
 
 int ultra_getDistance(int num) {
-  int value;
   uint8_t buf[2];
   if (ioctl(ultra_fd, I2C_SLAVE, ultra_address[num]) < 0) {
     printf("ERROR: couldn't set ultra address\n");
@@ -54,6 +51,5 @@ int ultra_getDistance(int num) {
     printf("ERROR: couldn't read from ultra\n");
     return -1;
   }
-  value =  (buf[0] << 8) | buf[1];
-  return value;
+  return (buf[0] << 8) | buf[1];
 }

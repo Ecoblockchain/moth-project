@@ -21,8 +21,8 @@
 pthread_mutex_t time_lock = PTHREAD_MUTEX_INITIALIZER;
 struct timespec start_time, current_time;
 
-FILE* fp[3];
-char filenames[3][130];
+FILE* fp[2];
+char filenames[2][130];
 double log_array[LOG_1_ARRAY_MAX];
 int files_open = 0;
 char mark[20] = "";
@@ -59,17 +59,13 @@ void open_files(char *time, char *date){
   if (stat(folder, &st)) mkdir(folder, 0700);
 	sprintf(filenames[0],"%s/log_%s_1_10hz.txt", folder, timestamp);
 	sprintf(filenames[1],"%s/log_%s_2_100hz.txt", folder, timestamp);
-	sprintf(filenames[2],"%s/log_%s_3_lidar.txt", folder, timestamp);
 	fp[0]=fopen(filenames[0], "w");
 	fp[1]=fopen(filenames[1], "w");
-	fp[2]=fopen(filenames[2], "w");
 	files_open = 1;
 	fprintf(fp[0], "ROW\tDATE\tTIME\tLATITUDE\tLONGITUDE\tSOG\tCOG\tSONAR_1\tSONAR_2\tSONAR_3\tSONAR_4\n");
 fprintf(fp[1], "ROW\tTIME\tACC_X\tACC_Y\tACC_Z\tHEADING\tDIRECTION\tANALOG_0\tANALOG_1\tANALOG_2\tANALOG_3\tANALOG_4\tRAW_ACC_X\tRAW_ACC_Y\tRAW_ACC_Z\tRAW_COMPASS_X\tRAW_COMPASS_Y\tRAW_COMPASS_Z\n");
-fprintf(fp[2], "ROW\tTIME\tVALUES\n");
 	fclose(fp[0]);
 	fclose(fp[1]);
-	fclose(fp[2]);
 }
 
 void write_log_1_row() {
@@ -96,7 +92,7 @@ void write_log_2_row(char* analog_buffer) {
   if (files_open == 0) return;
 	fp[1] = fopen(filenames[1], "a");
 	static int h = 1;
-	if (fprintf(fp[1],"%d\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\n", h++, getTimeOffset(), acc_accel[0], acc_accel[1], acc_accel[2],  mag_heading(), mag_direction(), analog_read(0), analog_buffer, acc_rawaccel[0], acc_rawaccel[1], acc_rawaccel[2], mag_coor[0], mag_coor[1], mag_coor[2]) < 0) {
+	if (fprintf(fp[1],"%d\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%0.2f\t%s\t%d\t%d\t%d\t%d\t%d\t%d\n", h++, getTimeOffset(), acc_accel[0], acc_accel[1], acc_accel[2],  mag_heading(), mag_direction(), analog_buffer, acc_rawaccel[0], acc_rawaccel[1], acc_rawaccel[2], mag_coor[0], mag_coor[1], mag_coor[2]) < 0) {
     printf("ERROR: couldn't write to log 2\n");
 	  fclose(fp[1]);
     return;

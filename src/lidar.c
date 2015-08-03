@@ -25,7 +25,6 @@ int lidar_init() {
 	}
 	printf("STATUS: lidar opened via urg_open\n");
 
-	lidar_data = (long*) malloc(sizeof(long) * urg_max_data_size(&lidar));
 
 	lidar_open = 1;
 	printf("STATUS: initialized lidar\n");
@@ -37,6 +36,7 @@ void* lidar_begin() {
 	static int k = 1;
 	while (1) 	{
 		lidar_fp = fopen(filenames[2], "a");
+		lidar_data = (long*) malloc(sizeof(long) * urg_max_data_size(&lidar));
 
 		if (urg_start_measurement(&lidar, URG_DISTANCE, 1, 0) < 0) {
 			printf("ERROR: unable to start measurement on LIDAR\n");

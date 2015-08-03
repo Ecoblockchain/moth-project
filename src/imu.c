@@ -12,6 +12,7 @@ uint8_t acc_buffer[6];
 float acc_offsets[3];
 float acc_accel[3];
 int16_t acc_rawaccel[3];
+int acc_open = 0;
 
 uint8_t gyro_buffer[8];
 int16_t gyro_rotation[3];
@@ -22,11 +23,13 @@ int gyro_temperature;
 uint8_t mag_rx_tx_buf[6];
 int16_t mag_coor[3];
 float mag_declination;
+int mag_open = 0;
 
 volatile int imu_fd;
 const char* imu_i2c_dev = "/dev/i2c-1";
 
 uint8_t acc_getScale() {
+  if (acc_open == 0) return -1;
   uint8_t result;
   uint8_t data = ADXL345_DATA_FORMAT;
 
@@ -48,6 +51,7 @@ uint8_t acc_getScale() {
 }
 
 int acc_update() {
+  if (acc_open == 0) return -1;
   uint8_t reg = ADXL345_XOUT_L;
   uint8_t buf[6];
 
@@ -109,6 +113,7 @@ int acc_init() {
   acc_offsets[1] = 0.003773584;
   acc_offsets[2] = 0.00390625;
 
+  acc_open = 1;
   acc_update();
 
   return 0;
@@ -198,10 +203,12 @@ int gyro_init() {
 }
 
 float mag_direction() {
+  if (mag_open == 0) return -1;
   return atan2(mag_coor[1] * SCALE_0_92_MG, mag_coor[0] * SCALE_0_92_MG) + mag_declination;
 }
 
 float mag_heading() {
+  if (mag_open == 0) return -1;
   float dir = mag_direction() * 180/M_PI;
   if(dir < 0){
     dir += 360.0;
@@ -210,6 +217,7 @@ float mag_heading() {
 }
 
 int mag_update() {
+  if (mag_open == 0) return -1;
   uint8_t buf[6];
   uint8_t reg = HMC5883L_DATA_REG;
   if (ioctl(imu_fd, I2C_SLAVE, HMC5883L_I2C_ADDR) < 0) {
@@ -258,6 +266,7 @@ int mag_init() {
     return -1;
   }
 
+  mag_open = 1;
   mag_update();
   return 0;
 }

@@ -1,8 +1,8 @@
-#ifndef SONAR_H_
-#define SONAR_H_
+#ifndef ULTRA_H_
+#define ULTRA_H_
 
 int ultra_init();
-int ultra_pingAll();
-int ultra_getDistance();
+void ultra_pingAll();
+int ultra_getDistance(int num);
 
 #endif

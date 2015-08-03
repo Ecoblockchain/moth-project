@@ -27,10 +27,12 @@ int switch_init() {
   fd = open(switch_dev_direction, O_RDWR);
   if (fd < 0) {
     printf("ERROR: couldn't initialize switch gpio\n");
+    close(fd);
     return -1;
   }
   if (write(fd, buf, 2) != 2) {
     printf("ERROR: couldn't set switch pin direction\n");
+    close(fd);
     return -1;
   }
   close(fd);
@@ -45,10 +47,12 @@ int switch_status() {
   switch_fd = open(switch_dev_value, O_RDONLY);
   if (switch_fd < 0) {
     printf("ERROR: couldn't open switch gpio\n");
+    close(switch_fd);
     return -1;
   }
   if (read(switch_fd, &buf, 1) != 1) {
     printf("ERROR: couldn't read switch pin value\n");
+    close(switch_fd);
     return -1;
   }
   close(switch_fd);
